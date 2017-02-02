@@ -67,6 +67,7 @@ function main()
   transfer_distribution_file("./distribution","FluxDriver.jl",path_to_output_file,"FluxDriver.jl")
   transfer_distribution_file("./distribution","Solve.jl",path_to_output_file,"Solve.jl")
   transfer_distribution_file("./distribution","Include.jl",path_to_output_file,"Include.jl")
+  transfer_distribution_file("./distribution","README_INCLUDE.md",path_to_output_file,"README.md")
 end
 
 main()
