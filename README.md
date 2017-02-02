@@ -30,7 +30,7 @@ To install the GLPK program issue the command:
 
 in the Julia REPL.
 
-### Problem generation
+### FBA code generation
 To generate a SSM, issue the command ``make_julia_model.jl`` from the command line:
 
 	$ julia make_julia_model.jl -m <input path> -o <output path>

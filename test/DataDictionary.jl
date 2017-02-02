@@ -25,7 +25,7 @@
 # ----------------------------------------------------------------------------------- #
 # Function: DataDictionary
 # Description: Holds simulation and model parameters as key => value pairs in a Julia Dict()
-# Generated on: 2017-02-02T06:22:25.948
+# Generated on: 2017-02-02T08:07:39.781
 #
 # Input arguments:
 # time_start::Float64 => Simulation start time value (scalar)
@@ -39,7 +39,6 @@ function DataDictionary(time_start,time_stop,time_step)
 
 	# Load the stoichiometric network from disk -
 	stoichiometric_matrix = readdlm("Network.dat");
-	stoichiometric_matrix = [stoichiometric_matrix[1:15,:] ; stoichiometric_matrix[17:end,:]]
 
 	# Setup default flux bounds array -
 	default_bounds_array = [
@@ -174,100 +173,132 @@ function DataDictionary(time_start,time_stop,time_step)
 		0	100.0	;	# 129 M_78dhf_c+M_atp_c+M_glu_L_c --> M_adp_c+M_pi_c+M_dhf_c
 		0	100.0	;	# 130 M_dhf_c+M_nadph_c+M_h_c --> M_thf_c+M_nadp_c
 		0	100.0	;	# 131 M_thf_c --> M_10fthf_c
-		0	100.0	;	# 132 M_5mthf_c+M_h2o_c --> M_10fthf_c
-		0	100.0	;	# 133 M_r5p_c+M_atp_c --> M_prpp_c+M_adp_c
-		0	100.0	;	# 134 2.0*M_atp_c+M_gln_L_c+M_hco3_c+M_h2o_c --> 2.0*M_atp_c+M_glu_L_c+M_pi_c+M_clasp_c
-		0	100.0	;	# 135 M_clasp_c+M_q8_c+M_h2o_c --> M_or_c+M_q8h2_c
-		0	100.0	;	# 136 M_prpp_c+M_or_c --> M_omp_c+M_ppi_c
-		0	100.0	;	# 137 M_omp_c --> M_ump_c+M_co2_c
-		0	100.0	;	# 138 M_utp_c+M_atp_c+M_nh4_c --> M_ctp_c+M_adp_c+M_pi_c
-		0	100.0	;	# 139 M_utp_c+M_gln_L_c+M_atp_c+M_h2o_c --> M_ctp_c+M_glu_L_c+M_adp_c+M_pi_c+3.0*M_h_c
-		0	100.0	;	# 140 M_gln_L_c+M_prpp_c+M_h2o_c --> M_5pbdra+M_ppi_c+M_glu_L_c
-		0	100.0	;	# 141 M_5pbdra+M_gly_L_c --> M_adp_c+M_pi_c+M_gar_c
-		0	100.0	;	# 142 M_10fthf_c+M_gar_c --> M_thf_c+M_fgar_c
-		0	100.0	;	# 143 M_atp_c+M_fgar_c+M_gln_L_c+M_h2o_c --> M_adp_c+M_pi_c+M_fgam_c+M_glu_L_c
-		0	100.0	;	# 144 M_atp_c+M_fgam_c --> M_adp_c+M_pi_c+M_air_c
-		0	100.0	;	# 145 M_atp_c+M_air_c+M_hco3_c --> M_adp_c+M_pi_c+M_cair_c
-		0	100.0	;	# 146 M_atp_c+M_cair_c+M_asp_L_c --> M_adp_c+M_pi_c+M_saicar_c
-		0	100.0	;	# 147 M_saicar_c --> M_fum_c+M_aicar_c
-		0	100.0	;	# 148 M_aicar_c+M_10fthf_c --> M_thf_c+M_faicar_c
-		0	100.0	;	# 149 M_faicar_c --> M_imp_c+M_h2o_c
-		0	100.0	;	# 150 M_imp_c+M_gtp_c+M_asp_L_c --> M_gdp_c+M_pi_c+M_fum_c+M_amp_c
-		0	100.0	;	# 151 M_imp_c+M_nad_c+M_h2o_c --> M_xmp_c+M_nadh_c+M_h_c
-		0	100.0	;	# 152 M_atp_c+M_xmp_c+M_gln_L_c+M_h2o_c --> M_amp_c+M_ppi_c+M_gmp_c+M_glu_L_c
-		0	100.0	;	# 153 M_atp_c+M_h2o_c --> M_amp_c+M_ppi_c
-		0	100.0	;	# 154 M_utp_c+M_h2o_c --> M_ump_c+M_ppi_c
-		0	100.0	;	# 155 M_ctp_c+M_h2o_c --> M_cmp_c+M_ppi_c
-		0	100.0	;	# 156 M_gtp_c+M_h2o_c --> M_gmp_c+M_ppi_c
-		0	100.0	;	# 157 M_udp_c+M_atp_c --> M_utp_c+M_adp_c
-		0	100.0	;	# 158 M_cdp_c+M_atp_c --> M_ctp_c+M_adp_c
-		0	100.0	;	# 159 M_gdp_c+M_atp_c --> M_gtp_c+M_adp_c
-		0	100.0	;	# 160 M_atp_c+M_ump_c --> M_adp_c+M_udp_c
-		0	100.0	;	# 161 M_atp_c+M_cmp_c --> M_adp_c+M_cdp_c
-		0	100.0	;	# 162 M_atp_c+M_gmp_c --> M_adp_c+M_gdp_c
-		0	100.0	;	# 163 [] --> M_o2_c
-		0	100.0	;	# 164 M_co2_c --> []
-		0	100.0	;	# 165 M_h_c --> []
-		0	100.0	;	# 166 [] --> M_h_c
-		0	100.0	;	# 167 [] --> M_h2s_c
-		0	100.0	;	# 168 M_h2s_c --> []
-		0	100.0	;	# 169 [] --> M_h2o_c
-		0	100.0	;	# 170 M_h2o_c --> []
-		0	100.0	;	# 171 [] --> M_pi_c
-		0	100.0	;	# 172 M_pi_c --> []
-		0	100.0	;	# 173 [] --> M_nh4_c
-		0	100.0	;	# 174 M_nh4_c --> []
-		0	100.0	;	# 175 [] --> M_glc_D_c
-		0	100.0	;	# 176 M_glc_D_c --> []
-		0	0.0	;	# 177 [] --> M_pyr_c
-		0	0.0	;	# 178 M_pyr_c --> []
-		0	0.0	;	# 179 [] --> M_ac_c
-		0	0.0	;	# 180 M_ac_c --> []
-		0	0.0	;	# 181 [] --> M_lac_D_c
-		0	0.0	;	# 182 M_lac_D_c --> []
-		0	0.0	;	# 183 [] --> M_hco3_c
-		0	0.0	;	# 184 M_hco3_c --> []
-		0	0.0	;	# 185 [] --> M_ala_L_c
-		0	0.0	;	# 186 M_ala_L_c --> []
-		0	0.0	;	# 187 [] --> M_arg_L_c
-		0	0.0	;	# 188 M_arg_L_c --> []
-		0	0.0	;	# 189 [] --> M_asn_L_c
-		0	0.0	;	# 190 M_asn_L_c --> []
-		0	0.0	;	# 191 [] --> M_asp_L_c
-		0	0.0	;	# 192 M_asp_L_c --> []
-		0	0.0	;	# 193 [] --> M_cys_L_c
-		0	0.0	;	# 194 M_cys_L_c --> []
-		0	0.0	;	# 195 [] --> M_glu_L_c
-		0	0.0	;	# 196 M_glu_L_c --> []
-		0	0.0	;	# 197 [] --> M_gln_L_c
-		0	0.0	;	# 198 M_gln_L_c --> []
-		0	0.0	;	# 199 [] --> M_gly_L_c
-		0	0.0	;	# 200 M_gly_L_c --> []
-		0	0.0	;	# 201 [] --> M_his_L_c
-		0	0.0	;	# 202 M_his_L_c --> []
-		0	0.0	;	# 203 [] --> M_ile_L_c
-		0	0.0	;	# 204 M_ile_L_c --> []
-		0	0.0	;	# 205 [] --> M_leu_L_c
-		0	0.0	;	# 206 M_leu_L_c --> []
-		0	0.0	;	# 207 [] --> M_lys_L_c
-		0	0.0	;	# 208 M_lys_L_c --> []
-		0	0.0	;	# 209 [] --> M_met_L_c
-		0	0.0	;	# 210 M_met_L_c --> []
-		0	0.0	;	# 211 [] --> M_phe_L_c
-		0	0.0	;	# 212 M_phe_L_c --> []
-		0	0.0	;	# 213 [] --> M_pro_L_c
-		0	0.0	;	# 214 M_pro_L_c --> []
-		0	0.0	;	# 215 [] --> M_ser_L_c
-		0	0.0	;	# 216 M_ser_L_c --> []
-		0	0.0	;	# 217 [] --> M_thr_L_c
-		0	0.0	;	# 218 M_thr_L_c --> []
-		0	0.0	;	# 219 [] --> M_trp_L_c
-		0	0.0	;	# 220 M_trp_L_c --> []
-		0	0.0	;	# 221 [] --> M_tyr_L_c
-		0	0.0	;	# 222 M_tyr_L_c --> []
-		0	0.0	;	# 223 [] --> M_val_L_c
-		0	0.0	;	# 224 M_val_L_c --> []
-		0	100.0	;	# 225 M_atp_c --> []
+		0	100.0	;	# 132 M_h2o_c+M_methf_c --> M_10fthf_c
+		0	100.0	;	# 133 M_10fthf_c --> M_h2o_c+M_methf_c
+		0	100.0	;	# 134 M_mlthf_c+M_nadp_c --> M_h_c+M_methf_c+M_nadph_c
+		0	100.0	;	# 135 M_h_c+M_methf_c+M_nadph_c --> M_mlthf_c+M_nadp_c
+		0	100.0	;	# 136 M_mlthf_c+M_h_c+M_nadh_c --> M_5mthf_c+M_nad_c
+		0	100.0	;	# 137 M_r5p_c+M_atp_c --> M_prpp_c+M_adp_c
+		0	100.0	;	# 138 2.0*M_atp_c+M_gln_L_c+M_hco3_c+M_h2o_c --> 2.0*M_atp_c+M_glu_L_c+M_pi_c+M_clasp_c
+		0	100.0	;	# 139 M_clasp_c+M_q8_c+M_h2o_c --> M_or_c+M_q8h2_c
+		0	100.0	;	# 140 M_prpp_c+M_or_c --> M_omp_c+M_ppi_c
+		0	100.0	;	# 141 M_omp_c --> M_ump_c+M_co2_c
+		0	100.0	;	# 142 M_utp_c+M_atp_c+M_nh4_c --> M_ctp_c+M_adp_c+M_pi_c
+		0	100.0	;	# 143 M_utp_c+M_gln_L_c+M_atp_c+M_h2o_c --> M_ctp_c+M_glu_L_c+M_adp_c+M_pi_c+3.0*M_h_c
+		0	100.0	;	# 144 M_gln_L_c+M_prpp_c+M_h2o_c --> M_5pbdra+M_ppi_c+M_glu_L_c
+		0	100.0	;	# 145 M_5pbdra+M_gly_L_c --> M_adp_c+M_pi_c+M_gar_c
+		0	100.0	;	# 146 M_10fthf_c+M_gar_c --> M_thf_c+M_fgar_c
+		0	100.0	;	# 147 M_atp_c+M_fgar_c+M_gln_L_c+M_h2o_c --> M_adp_c+M_pi_c+M_fgam_c+M_glu_L_c
+		0	100.0	;	# 148 M_atp_c+M_fgam_c --> M_adp_c+M_pi_c+M_air_c
+		0	100.0	;	# 149 M_atp_c+M_air_c+M_hco3_c --> M_adp_c+M_pi_c+M_cair_c
+		0	100.0	;	# 150 M_atp_c+M_cair_c+M_asp_L_c --> M_adp_c+M_pi_c+M_saicar_c
+		0	100.0	;	# 151 M_saicar_c --> M_fum_c+M_aicar_c
+		0	100.0	;	# 152 M_aicar_c+M_10fthf_c --> M_thf_c+M_faicar_c
+		0	100.0	;	# 153 M_faicar_c --> M_imp_c+M_h2o_c
+		0	100.0	;	# 154 M_imp_c+M_gtp_c+M_asp_L_c --> M_gdp_c+M_pi_c+M_fum_c+M_amp_c
+		0	100.0	;	# 155 M_imp_c+M_nad_c+M_h2o_c --> M_xmp_c+M_nadh_c+M_h_c
+		0	100.0	;	# 156 M_atp_c+M_xmp_c+M_gln_L_c+M_h2o_c --> M_amp_c+M_ppi_c+M_gmp_c+M_glu_L_c
+		0	100.0	;	# 157 M_atp_c+M_h2o_c --> M_amp_c+M_ppi_c
+		0	100.0	;	# 158 M_utp_c+M_h2o_c --> M_ump_c+M_ppi_c
+		0	100.0	;	# 159 M_ctp_c+M_h2o_c --> M_cmp_c+M_ppi_c
+		0	100.0	;	# 160 M_gtp_c+M_h2o_c --> M_gmp_c+M_ppi_c
+		0	100.0	;	# 161 M_udp_c+M_atp_c --> M_utp_c+M_adp_c
+		0	100.0	;	# 162 M_cdp_c+M_atp_c --> M_ctp_c+M_adp_c
+		0	100.0	;	# 163 M_gdp_c+M_atp_c --> M_gtp_c+M_adp_c
+		0	100.0	;	# 164 M_atp_c+M_ump_c --> M_adp_c+M_udp_c
+		0	100.0	;	# 165 M_atp_c+M_cmp_c --> M_adp_c+M_cdp_c
+		0	100.0	;	# 166 M_atp_c+M_gmp_c --> M_adp_c+M_gdp_c
+		0	100.0	;	# 167 GENE_CAT+RNAP --> OPEN_GENE_CAT
+		0	100.0	;	# 168 OPEN_GENE_CAT+151.0*M_gtp_c+144.0*M_ctp_c+189.0*M_utp_c+176.0*M_atp_c --> mRNA_CAT+GENE_CAT+RNAP+1320.0*M_pi_c
+		0	100.0	;	# 169 mRNA_CAT --> 151.0*M_gmp_c+144.0*M_cmp_c+189.0*M_ump_c+176.0*M_amp_c
+		0	100.0	;	# 170 mRNA_CAT+RIBOSOME --> RIBOSOME_START_CAT
+		0	100.0	;	# 171 RIBOSOME_START_CAT+438.0*M_gtp_c+15.0*M_ala_L_c_tRNA+5.0*M_arg_L_c_tRNA+10.0*M_asn_L_c_tRNA+12.0*M_asp_L_c_tRNA+5.0*M_cys_L_c_tRNA+12.0*M_glu_L_c_tRNA+13.0*M_gln_L_c_tRNA+10.0*M_gly_L_c_tRNA+12.0*M_his_L_c_tRNA+9.0*M_ile_L_c_tRNA+13.0*M_leu_L_c_tRNA+12.0*M_lys_L_c_tRNA+9.0*M_met_L_c_tRNA+20.0*M_phe_L_c_tRNA+7.0*M_pro_L_c_tRNA+10.0*M_ser_L_c_tRNA+13.0*M_thr_L_c_tRNA+5.0*M_trp_L_c_tRNA+11.0*M_tyr_L_c_tRNA+16.0*M_val_L_c_tRNA --> RIBOSOME+mRNA_CAT+PROTEIN_CAT+438.0*M_gdp_c+438.0*M_pi_c+219.0*tRNA
+		0	100.0	;	# 172 15.0*M_ala_L_c+15.0*M_atp_c+15.0*tRNA --> 15.0*M_ala_L_c_tRNA+15.0*M_amp_c+30.0*M_pi_c
+		0	100.0	;	# 173 5.0*M_arg_L_c+5.0*M_atp_c+5.0*tRNA --> 5.0*M_arg_L_c_tRNA+5.0*M_amp_c+10.0*M_pi_c
+		0	100.0	;	# 174 10.0*M_asn_L_c+10.0*M_atp_c+10.0*tRNA --> 10.0*M_asn_L_c_tRNA+10.0*M_amp_c+20.0*M_pi_c
+		0	100.0	;	# 175 12.0*M_asp_L_c+12.0*M_atp_c+12.0*tRNA --> 12.0*M_asp_L_c_tRNA+12.0*M_amp_c+24.0*M_pi_c
+		0	100.0	;	# 176 5.0*M_cys_L_c+5.0*M_atp_c+5.0*tRNA --> 5.0*M_cys_L_c_tRNA+5.0*M_amp_c+10.0*M_pi_c
+		0	100.0	;	# 177 12.0*M_glu_L_c+12.0*M_atp_c+12.0*tRNA --> 12.0*M_glu_L_c_tRNA+12.0*M_amp_c+24.0*M_pi_c
+		0	100.0	;	# 178 13.0*M_gln_L_c+13.0*M_atp_c+13.0*tRNA --> 13.0*M_gln_L_c_tRNA+13.0*M_amp_c+26.0*M_pi_c
+		0	100.0	;	# 179 10.0*M_gly_L_c+10.0*M_atp_c+10.0*tRNA --> 10.0*M_gly_L_c_tRNA+10.0*M_amp_c+20.0*M_pi_c
+		0	100.0	;	# 180 12.0*M_his_L_c+12.0*M_atp_c+12.0*tRNA --> 12.0*M_his_L_c_tRNA+12.0*M_amp_c+24.0*M_pi_c
+		0	100.0	;	# 181 9.0*M_ile_L_c+9.0*M_atp_c+9.0*tRNA --> 9.0*M_ile_L_c_tRNA+9.0*M_amp_c+18.0*M_pi_c
+		0	100.0	;	# 182 13.0*M_leu_L_c+13.0*M_atp_c+13.0*tRNA --> 13.0*M_leu_L_c_tRNA+13.0*M_amp_c+26.0*M_pi_c
+		0	100.0	;	# 183 12.0*M_lys_L_c+12.0*M_atp_c+12.0*tRNA --> 12.0*M_lys_L_c_tRNA+12.0*M_amp_c+24.0*M_pi_c
+		0	100.0	;	# 184 9.0*M_met_L_c+9.0*M_atp_c+9.0*tRNA --> 9.0*M_met_L_c_tRNA+9.0*M_amp_c+18.0*M_pi_c
+		0	100.0	;	# 185 20.0*M_phe_L_c+20.0*M_atp_c+20.0*tRNA --> 20.0*M_phe_L_c_tRNA+20.0*M_amp_c+40.0*M_pi_c
+		0	100.0	;	# 186 7.0*M_pro_L_c+7.0*M_atp_c+7.0*tRNA --> 7.0*M_pro_L_c_tRNA+7.0*M_amp_c+14.0*M_pi_c
+		0	100.0	;	# 187 10.0*M_ser_L_c+10.0*M_atp_c+10.0*tRNA --> 10.0*M_ser_L_c_tRNA+10.0*M_amp_c+20.0*M_pi_c
+		0	100.0	;	# 188 13.0*M_thr_L_c+13.0*M_atp_c+13.0*tRNA --> 13.0*M_thr_L_c_tRNA+13.0*M_amp_c+26.0*M_pi_c
+		0	100.0	;	# 189 5.0*M_trp_L_c+5.0*M_atp_c+5.0*tRNA --> 5.0*M_trp_L_c_tRNA+5.0*M_amp_c+10.0*M_pi_c
+		0	100.0	;	# 190 11.0*M_tyr_L_c+11.0*M_atp_c+11.0*tRNA --> 11.0*M_tyr_L_c_tRNA+11.0*M_amp_c+22.0*M_pi_c
+		0	100.0	;	# 191 16.0*M_val_L_c+16.0*M_atp_c+16.0*tRNA --> 16.0*M_val_L_c_tRNA+16.0*M_amp_c+32.0*M_pi_c
+		0	100.0	;	# 192 [] --> tRNA
+		0	100.0	;	# 193 tRNA --> []
+		0	100.0	;	# 194 PROTEIN_CAT --> []
+		0	100.0	;	# 195 [] --> M_o2_c
+		0	100.0	;	# 196 M_co2_c --> []
+		0	100.0	;	# 197 M_h_c --> []
+		0	100.0	;	# 198 [] --> M_h_c
+		0	100.0	;	# 199 [] --> M_h2s_c
+		0	100.0	;	# 200 M_h2s_c --> []
+		0	100.0	;	# 201 [] --> M_h2o_c
+		0	100.0	;	# 202 M_h2o_c --> []
+		0	100.0	;	# 203 [] --> M_pi_c
+		0	100.0	;	# 204 M_pi_c --> []
+		0	100.0	;	# 205 [] --> M_nh4_c
+		0	100.0	;	# 206 M_nh4_c --> []
+		0	100.0	;	# 207 [] --> M_glc_D_c
+		0	100.0	;	# 208 M_glc_D_c --> []
+		0	0.0;	# 209 [] --> M_pyr_c
+		0	0.0;	# 210 M_pyr_c --> []
+		0	0.0;	# 211 [] --> M_ac_c
+		0	0.0;	# 212 M_ac_c --> []
+		0	0.0;	# 213 [] --> M_lac_D_c
+		0	0.0;	# 214 M_lac_D_c --> []
+		0	100.0;	# 215 [] --> M_hco3_c
+		0	0.0;	# 216 M_hco3_c --> []
+		0	0.0;	# 217 [] --> M_ala_L_c
+		0	0.0;	# 218 M_ala_L_c --> []
+		0	0.0;	# 219 [] --> M_arg_L_c
+		0	0.0;	# 220 M_arg_L_c --> []
+		0	0.0;	# 221 [] --> M_asn_L_c
+		0	0.0;	# 222 M_asn_L_c --> []
+		0	0.0;	# 223 [] --> M_asp_L_c
+		0	0.0;	# 224 M_asp_L_c --> []
+		0	0.0;	# 225 [] --> M_cys_L_c
+		0	0.0;	# 226 M_cys_L_c --> []
+		0	0.0;	# 227 [] --> M_glu_L_c
+		0	0.0;	# 228 M_glu_L_c --> []
+		0	0.0;	# 229 [] --> M_gln_L_c
+		0	0.0;	# 230 M_gln_L_c --> []
+		0	0.0;	# 231 [] --> M_gly_L_c
+		0	0.0;	# 232 M_gly_L_c --> []
+		0	0.0;	# 233 [] --> M_his_L_c
+		0	0.0;	# 234 M_his_L_c --> []
+		0	0.0;	# 235 [] --> M_ile_L_c
+		0	0.0;	# 236 M_ile_L_c --> []
+		0	0.0;	# 237 [] --> M_leu_L_c
+		0	0.0;	# 238 M_leu_L_c --> []
+		0	0.0;	# 239 [] --> M_lys_L_c
+		0	0.0;	# 240 M_lys_L_c --> []
+		0	0.0;	# 241 [] --> M_met_L_c
+		0	0.0;	# 242 M_met_L_c --> []
+		0	0.0;	# 243 [] --> M_phe_L_c
+		0	0.0;	# 244 M_phe_L_c --> []
+		0	0.0;	# 245 [] --> M_pro_L_c
+		0	0.0;	# 246 M_pro_L_c --> []
+		0	0.0;	# 247 [] --> M_ser_L_c
+		0	0.0;	# 248 M_ser_L_c --> []
+		0	0.0;	# 249 [] --> M_thr_L_c
+		0	0.0;	# 250 M_thr_L_c --> []
+		0	0.0;	# 251 [] --> M_trp_L_c
+		0	0.0;	# 252 M_trp_L_c --> []
+		0	0.0;	# 253 [] --> M_tyr_L_c
+		0	0.0;	# 254 M_tyr_L_c --> []
+		0	0.0;	# 255 [] --> M_val_L_c
+		0	0.0;	# 256 M_val_L_c --> []
+		0	0.0;	# 257 M_atp_c --> []
 	];
 
 	# Setup default species bounds array -
@@ -404,100 +435,132 @@ function DataDictionary(time_start,time_stop,time_step)
 		0.0	;	# 129 R_fol_3::M_78dhf_c+M_atp_c+M_glu_L_c --> M_adp_c+M_pi_c+M_dhf_c
 		0.0	;	# 130 R_fol_4::M_dhf_c+M_nadph_c+M_h_c --> M_thf_c+M_nadp_c
 		0.0	;	# 131 R_fol_5::M_thf_c --> M_10fthf_c
-		0.0	;	# 132 R_hack_2::M_5mthf_c+M_h2o_c --> M_10fthf_c
-		0.0	;	# 133 R_prpp_syn::M_r5p_c+M_atp_c --> M_prpp_c+M_adp_c
-		0.0	;	# 134 R_or_syn_1::2.0*M_atp_c+M_gln_L_c+M_hco3_c+M_h2o_c --> 2.0*M_atp_c+M_glu_L_c+M_pi_c+M_clasp_c
-		0.0	;	# 135 R_or_syn_2::M_clasp_c+M_q8_c+M_h2o_c --> M_or_c+M_q8h2_c
-		0.0	;	# 136 R_omp_syn::M_prpp_c+M_or_c --> M_omp_c+M_ppi_c
-		0.0	;	# 137 R_ump_syn::M_omp_c --> M_ump_c+M_co2_c
-		0.0	;	# 138 R_ctp_1::M_utp_c+M_atp_c+M_nh4_c --> M_ctp_c+M_adp_c+M_pi_c
-		0.0	;	# 139 R_ctp_2::M_utp_c+M_gln_L_c+M_atp_c+M_h2o_c --> M_ctp_c+M_glu_L_c+M_adp_c+M_pi_c+3.0*M_h_c
-		0.0	;	# 140 R_A_syn_1::M_gln_L_c+M_prpp_c+M_h2o_c --> M_5pbdra+M_ppi_c+M_glu_L_c
-		0.0	;	# 141 R_A_syn_2::M_5pbdra+M_gly_L_c --> M_adp_c+M_pi_c+M_gar_c
-		0.0	;	# 142 R_A_syn_3::M_10fthf_c+M_gar_c --> M_thf_c+M_fgar_c
-		0.0	;	# 143 R_A_syn_4::M_atp_c+M_fgar_c+M_gln_L_c+M_h2o_c --> M_adp_c+M_pi_c+M_fgam_c+M_glu_L_c
-		0.0	;	# 144 R_A_syn_5::M_atp_c+M_fgam_c --> M_adp_c+M_pi_c+M_air_c
-		0.0	;	# 145 R_A_syn_6::M_atp_c+M_air_c+M_hco3_c --> M_adp_c+M_pi_c+M_cair_c
-		0.0	;	# 146 R_A_syn_7::M_atp_c+M_cair_c+M_asp_L_c --> M_adp_c+M_pi_c+M_saicar_c
-		0.0	;	# 147 R_A_syn_8::M_saicar_c --> M_fum_c+M_aicar_c
-		0.0	;	# 148 R_A_syn_9::M_aicar_c+M_10fthf_c --> M_thf_c+M_faicar_c
-		0.0	;	# 149 R_A_syn_10::M_faicar_c --> M_imp_c+M_h2o_c
-		0.0	;	# 150 R_A_syn_12::M_imp_c+M_gtp_c+M_asp_L_c --> M_gdp_c+M_pi_c+M_fum_c+M_amp_c
-		0.0	;	# 151 R_xmp_syn::M_imp_c+M_nad_c+M_h2o_c --> M_xmp_c+M_nadh_c+M_h_c
-		0.0	;	# 152 R_gmp_syn::M_atp_c+M_xmp_c+M_gln_L_c+M_h2o_c --> M_amp_c+M_ppi_c+M_gmp_c+M_glu_L_c
-		0.0	;	# 153 R_atp_amp::M_atp_c+M_h2o_c --> M_amp_c+M_ppi_c
-		0.0	;	# 154 R_utp_ump::M_utp_c+M_h2o_c --> M_ump_c+M_ppi_c
-		0.0	;	# 155 R_ctp_cmp::M_ctp_c+M_h2o_c --> M_cmp_c+M_ppi_c
-		0.0	;	# 156 R_gtp_gmp::M_gtp_c+M_h2o_c --> M_gmp_c+M_ppi_c
-		0.0	;	# 157 R_udp_utp::M_udp_c+M_atp_c --> M_utp_c+M_adp_c
-		0.0	;	# 158 R_cdp_ctp::M_cdp_c+M_atp_c --> M_ctp_c+M_adp_c
-		0.0	;	# 159 R_gdp_gtp::M_gdp_c+M_atp_c --> M_gtp_c+M_adp_c
-		0.0	;	# 160 R_atp_ump::M_atp_c+M_ump_c --> M_adp_c+M_udp_c
-		0.0	;	# 161 R_atp_cmp::M_atp_c+M_cmp_c --> M_adp_c+M_cdp_c
-		0.0	;	# 162 R_atp_gmp::M_atp_c+M_gmp_c --> M_adp_c+M_gdp_c
-		0.0	;	# 163 M_o2_c_exchange::[] --> M_o2_c
-		0.0	;	# 164 M_co2_c_exchange::M_co2_c --> []
-		0.0	;	# 165 M_h_c_exchange::M_h_c --> []
-		0.0	;	# 166 M_h_c_exchange_reverse::[] --> M_h_c
-		0.0	;	# 167 M_h2s_c_exchange::[] --> M_h2s_c
-		0.0	;	# 168 M_h2s_c_exchange_reverse::M_h2s_c --> []
-		0.0	;	# 169 M_h2o_c_exchange::[] --> M_h2o_c
-		0.0	;	# 170 M_h2o_c_exchange_reverse::M_h2o_c --> []
-		0.0	;	# 171 M_pi_c_exchange::[] --> M_pi_c
-		0.0	;	# 172 M_pi_c_exchange_reverse::M_pi_c --> []
-		0.0	;	# 173 M_nh4_c_exchange::[] --> M_nh4_c
-		0.0	;	# 174 M_nh4_c_exchange_reverse::M_nh4_c --> []
-		0.0	;	# 175 M_glc_D_c_exchange::[] --> M_glc_D_c
-		0.0	;	# 176 M_glc_D_c_exchange_reverse::M_glc_D_c --> []
-		0.0	;	# 177 M_pyr_c_exchange::[] --> M_pyr_c
-		0.0	;	# 178 M_pyr_c_exchange_reverse::M_pyr_c --> []
-		0.0	;	# 179 M_ac_c_exchange::[] --> M_ac_c
-		0.0	;	# 180 M_ac_c_exchange_reverse::M_ac_c --> []
-		0.0	;	# 181 M_lac_D_c_exchange::[] --> M_lac_D_c
-		0.0	;	# 182 M_lac_D_c_exchange_reverse::M_lac_D_c --> []
-		0.0	;	# 183 M_hco3_c_exchange::[] --> M_hco3_c
-		0.0	;	# 184 M_hco3_c_exchange_reverse::M_hco3_c --> []
-		0.0	;	# 185 M_ala_L_c_exchange::[] --> M_ala_L_c
-		0.0	;	# 186 M_ala_L_c_exchange_reverse::M_ala_L_c --> []
-		0.0	;	# 187 M_arg_L_c_exchange::[] --> M_arg_L_c
-		0.0	;	# 188 M_arg_L_c_exchange_reverse::M_arg_L_c --> []
-		0.0	;	# 189 M_asn_L_c_exchange::[] --> M_asn_L_c
-		0.0	;	# 190 M_asn_L_c_exchange_reverse::M_asn_L_c --> []
-		0.0	;	# 191 M_asp_L_c_exchange::[] --> M_asp_L_c
-		0.0	;	# 192 M_asp_L_c_exchange_reverse::M_asp_L_c --> []
-		0.0	;	# 193 M_cys_L_c_exchange::[] --> M_cys_L_c
-		0.0	;	# 194 M_cys_L_c_exchange_reverse::M_cys_L_c --> []
-		0.0	;	# 195 M_glu_L_c_exchange::[] --> M_glu_L_c
-		0.0	;	# 196 M_glu_L_c_exchange_reverse::M_glu_L_c --> []
-		0.0	;	# 197 M_gln_L_c_exchange::[] --> M_gln_L_c
-		0.0	;	# 198 M_gln_L_c_exchange_reverse::M_gln_L_c --> []
-		0.0	;	# 199 M_gly_L_c_exchange::[] --> M_gly_L_c
-		0.0	;	# 200 M_gly_L_c_exchange_reverse::M_gly_L_c --> []
-		0.0	;	# 201 M_his_L_c_exchange::[] --> M_his_L_c
-		0.0	;	# 202 M_his_L_c_exchange_reverse::M_his_L_c --> []
-		0.0	;	# 203 M_ile_L_c_exchange::[] --> M_ile_L_c
-		0.0	;	# 204 M_ile_L_c_exchange_reverse::M_ile_L_c --> []
-		0.0	;	# 205 M_leu_L_c_exchange::[] --> M_leu_L_c
-		0.0	;	# 206 M_leu_L_c_exchange_reverse::M_leu_L_c --> []
-		0.0	;	# 207 M_lys_L_c_exchange::[] --> M_lys_L_c
-		0.0	;	# 208 M_lys_L_c_exchange_reverse::M_lys_L_c --> []
-		0.0	;	# 209 M_met_L_c_exchange::[] --> M_met_L_c
-		0.0	;	# 210 M_met_L_c_exchange_reverse::M_met_L_c --> []
-		0.0	;	# 211 M_phe_L_c_exchange::[] --> M_phe_L_c
-		0.0	;	# 212 M_phe_L_c_exchange_reverse::M_phe_L_c --> []
-		0.0	;	# 213 M_pro_L_c_exchange::[] --> M_pro_L_c
-		0.0	;	# 214 M_pro_L_c_exchange_reverse::M_pro_L_c --> []
-		0.0	;	# 215 M_ser_L_c_exchange::[] --> M_ser_L_c
-		0.0	;	# 216 M_ser_L_c_exchange_reverse::M_ser_L_c --> []
-		0.0	;	# 217 M_thr_L_c_exchange::[] --> M_thr_L_c
-		0.0	;	# 218 M_thr_L_c_exchange_reverse::M_thr_L_c --> []
-		0.0	;	# 219 M_trp_L_c_exchange::[] --> M_trp_L_c
-		0.0	;	# 220 M_trp_L_c_exchange_reverse::M_trp_L_c --> []
-		0.0	;	# 221 M_tyr_L_c_exchange::[] --> M_tyr_L_c
-		0.0	;	# 222 M_tyr_L_c_exchange_reverse::M_tyr_L_c --> []
-		0.0	;	# 223 M_val_L_c_exchange::[] --> M_val_L_c
-		0.0	;	# 224 M_val_L_c_exchange_reverse::M_val_L_c --> []
-		-1.0	;	# 225 M_atp_exchange::M_atp_c --> []
+		0.0	;	# 132 R_mthfc::M_h2o_c+M_methf_c --> M_10fthf_c
+		0.0	;	# 133 R_mthfc_reverse::M_10fthf_c --> M_h2o_c+M_methf_c
+		0.0	;	# 134 R_mthfd::M_mlthf_c+M_nadp_c --> M_h_c+M_methf_c+M_nadph_c
+		0.0	;	# 135 R_mthfd_reverse::M_h_c+M_methf_c+M_nadph_c --> M_mlthf_c+M_nadp_c
+		0.0	;	# 136 R_mthfr2::M_mlthf_c+M_h_c+M_nadh_c --> M_5mthf_c+M_nad_c
+		0.0	;	# 137 R_prpp_syn::M_r5p_c+M_atp_c --> M_prpp_c+M_adp_c
+		0.0	;	# 138 R_or_syn_1::2.0*M_atp_c+M_gln_L_c+M_hco3_c+M_h2o_c --> 2.0*M_atp_c+M_glu_L_c+M_pi_c+M_clasp_c
+		0.0	;	# 139 R_or_syn_2::M_clasp_c+M_q8_c+M_h2o_c --> M_or_c+M_q8h2_c
+		0.0	;	# 140 R_omp_syn::M_prpp_c+M_or_c --> M_omp_c+M_ppi_c
+		0.0	;	# 141 R_ump_syn::M_omp_c --> M_ump_c+M_co2_c
+		0.0	;	# 142 R_ctp_1::M_utp_c+M_atp_c+M_nh4_c --> M_ctp_c+M_adp_c+M_pi_c
+		0.0	;	# 143 R_ctp_2::M_utp_c+M_gln_L_c+M_atp_c+M_h2o_c --> M_ctp_c+M_glu_L_c+M_adp_c+M_pi_c+3.0*M_h_c
+		0.0	;	# 144 R_A_syn_1::M_gln_L_c+M_prpp_c+M_h2o_c --> M_5pbdra+M_ppi_c+M_glu_L_c
+		0.0	;	# 145 R_A_syn_2::M_5pbdra+M_gly_L_c --> M_adp_c+M_pi_c+M_gar_c
+		0.0	;	# 146 R_A_syn_3::M_10fthf_c+M_gar_c --> M_thf_c+M_fgar_c
+		0.0	;	# 147 R_A_syn_4::M_atp_c+M_fgar_c+M_gln_L_c+M_h2o_c --> M_adp_c+M_pi_c+M_fgam_c+M_glu_L_c
+		0.0	;	# 148 R_A_syn_5::M_atp_c+M_fgam_c --> M_adp_c+M_pi_c+M_air_c
+		0.0	;	# 149 R_A_syn_6::M_atp_c+M_air_c+M_hco3_c --> M_adp_c+M_pi_c+M_cair_c
+		0.0	;	# 150 R_A_syn_7::M_atp_c+M_cair_c+M_asp_L_c --> M_adp_c+M_pi_c+M_saicar_c
+		0.0	;	# 151 R_A_syn_8::M_saicar_c --> M_fum_c+M_aicar_c
+		0.0	;	# 152 R_A_syn_9::M_aicar_c+M_10fthf_c --> M_thf_c+M_faicar_c
+		0.0	;	# 153 R_A_syn_10::M_faicar_c --> M_imp_c+M_h2o_c
+		0.0	;	# 154 R_A_syn_12::M_imp_c+M_gtp_c+M_asp_L_c --> M_gdp_c+M_pi_c+M_fum_c+M_amp_c
+		0.0	;	# 155 R_xmp_syn::M_imp_c+M_nad_c+M_h2o_c --> M_xmp_c+M_nadh_c+M_h_c
+		0.0	;	# 156 R_gmp_syn::M_atp_c+M_xmp_c+M_gln_L_c+M_h2o_c --> M_amp_c+M_ppi_c+M_gmp_c+M_glu_L_c
+		0.0	;	# 157 R_atp_amp::M_atp_c+M_h2o_c --> M_amp_c+M_ppi_c
+		0.0	;	# 158 R_utp_ump::M_utp_c+M_h2o_c --> M_ump_c+M_ppi_c
+		0.0	;	# 159 R_ctp_cmp::M_ctp_c+M_h2o_c --> M_cmp_c+M_ppi_c
+		0.0	;	# 160 R_gtp_gmp::M_gtp_c+M_h2o_c --> M_gmp_c+M_ppi_c
+		0.0	;	# 161 R_udp_utp::M_udp_c+M_atp_c --> M_utp_c+M_adp_c
+		0.0	;	# 162 R_cdp_ctp::M_cdp_c+M_atp_c --> M_ctp_c+M_adp_c
+		0.0	;	# 163 R_gdp_gtp::M_gdp_c+M_atp_c --> M_gtp_c+M_adp_c
+		0.0	;	# 164 R_atp_ump::M_atp_c+M_ump_c --> M_adp_c+M_udp_c
+		0.0	;	# 165 R_atp_cmp::M_atp_c+M_cmp_c --> M_adp_c+M_cdp_c
+		0.0	;	# 166 R_atp_gmp::M_atp_c+M_gmp_c --> M_adp_c+M_gdp_c
+		0.0	;	# 167 transcriptional_initiation_CAT::GENE_CAT+RNAP --> OPEN_GENE_CAT
+		0.0	;	# 168 transcription_CAT::OPEN_GENE_CAT+151.0*M_gtp_c+144.0*M_ctp_c+189.0*M_utp_c+176.0*M_atp_c --> mRNA_CAT+GENE_CAT+RNAP+1320.0*M_pi_c
+		0.0	;	# 169 mRNA_degradation_CAT::mRNA_CAT --> 151.0*M_gmp_c+144.0*M_cmp_c+189.0*M_ump_c+176.0*M_amp_c
+		0.0	;	# 170 translation_initiation_CAT::mRNA_CAT+RIBOSOME --> RIBOSOME_START_CAT
+		0.0	;	# 171 translation_CAT::RIBOSOME_START_CAT+438.0*M_gtp_c+15.0*M_ala_L_c_tRNA+5.0*M_arg_L_c_tRNA+10.0*M_asn_L_c_tRNA+12.0*M_asp_L_c_tRNA+5.0*M_cys_L_c_tRNA+12.0*M_glu_L_c_tRNA+13.0*M_gln_L_c_tRNA+10.0*M_gly_L_c_tRNA+12.0*M_his_L_c_tRNA+9.0*M_ile_L_c_tRNA+13.0*M_leu_L_c_tRNA+12.0*M_lys_L_c_tRNA+9.0*M_met_L_c_tRNA+20.0*M_phe_L_c_tRNA+7.0*M_pro_L_c_tRNA+10.0*M_ser_L_c_tRNA+13.0*M_thr_L_c_tRNA+5.0*M_trp_L_c_tRNA+11.0*M_tyr_L_c_tRNA+16.0*M_val_L_c_tRNA --> RIBOSOME+mRNA_CAT+PROTEIN_CAT+438.0*M_gdp_c+438.0*M_pi_c+219.0*tRNA
+		0.0	;	# 172 tRNA_charging_M_ala_L_c_CAT::15.0*M_ala_L_c+15.0*M_atp_c+15.0*tRNA --> 15.0*M_ala_L_c_tRNA+15.0*M_amp_c+30.0*M_pi_c
+		0.0	;	# 173 tRNA_charging_M_arg_L_c_CAT::5.0*M_arg_L_c+5.0*M_atp_c+5.0*tRNA --> 5.0*M_arg_L_c_tRNA+5.0*M_amp_c+10.0*M_pi_c
+		0.0	;	# 174 tRNA_charging_M_asn_L_c_CAT::10.0*M_asn_L_c+10.0*M_atp_c+10.0*tRNA --> 10.0*M_asn_L_c_tRNA+10.0*M_amp_c+20.0*M_pi_c
+		0.0	;	# 175 tRNA_charging_M_asp_L_c_CAT::12.0*M_asp_L_c+12.0*M_atp_c+12.0*tRNA --> 12.0*M_asp_L_c_tRNA+12.0*M_amp_c+24.0*M_pi_c
+		0.0	;	# 176 tRNA_charging_M_cys_L_c_CAT::5.0*M_cys_L_c+5.0*M_atp_c+5.0*tRNA --> 5.0*M_cys_L_c_tRNA+5.0*M_amp_c+10.0*M_pi_c
+		0.0	;	# 177 tRNA_charging_M_glu_L_c_CAT::12.0*M_glu_L_c+12.0*M_atp_c+12.0*tRNA --> 12.0*M_glu_L_c_tRNA+12.0*M_amp_c+24.0*M_pi_c
+		0.0	;	# 178 tRNA_charging_M_gln_L_c_CAT::13.0*M_gln_L_c+13.0*M_atp_c+13.0*tRNA --> 13.0*M_gln_L_c_tRNA+13.0*M_amp_c+26.0*M_pi_c
+		0.0	;	# 179 tRNA_charging_M_gly_L_c_CAT::10.0*M_gly_L_c+10.0*M_atp_c+10.0*tRNA --> 10.0*M_gly_L_c_tRNA+10.0*M_amp_c+20.0*M_pi_c
+		0.0	;	# 180 tRNA_charging_M_his_L_c_CAT::12.0*M_his_L_c+12.0*M_atp_c+12.0*tRNA --> 12.0*M_his_L_c_tRNA+12.0*M_amp_c+24.0*M_pi_c
+		0.0	;	# 181 tRNA_charging_M_ile_L_c_CAT::9.0*M_ile_L_c+9.0*M_atp_c+9.0*tRNA --> 9.0*M_ile_L_c_tRNA+9.0*M_amp_c+18.0*M_pi_c
+		0.0	;	# 182 tRNA_charging_M_leu_L_c_CAT::13.0*M_leu_L_c+13.0*M_atp_c+13.0*tRNA --> 13.0*M_leu_L_c_tRNA+13.0*M_amp_c+26.0*M_pi_c
+		0.0	;	# 183 tRNA_charging_M_lys_L_c_CAT::12.0*M_lys_L_c+12.0*M_atp_c+12.0*tRNA --> 12.0*M_lys_L_c_tRNA+12.0*M_amp_c+24.0*M_pi_c
+		0.0	;	# 184 tRNA_charging_M_met_L_c_CAT::9.0*M_met_L_c+9.0*M_atp_c+9.0*tRNA --> 9.0*M_met_L_c_tRNA+9.0*M_amp_c+18.0*M_pi_c
+		0.0	;	# 185 tRNA_charging_M_phe_L_c_CAT::20.0*M_phe_L_c+20.0*M_atp_c+20.0*tRNA --> 20.0*M_phe_L_c_tRNA+20.0*M_amp_c+40.0*M_pi_c
+		0.0	;	# 186 tRNA_charging_M_pro_L_c_CAT::7.0*M_pro_L_c+7.0*M_atp_c+7.0*tRNA --> 7.0*M_pro_L_c_tRNA+7.0*M_amp_c+14.0*M_pi_c
+		0.0	;	# 187 tRNA_charging_M_ser_L_c_CAT::10.0*M_ser_L_c+10.0*M_atp_c+10.0*tRNA --> 10.0*M_ser_L_c_tRNA+10.0*M_amp_c+20.0*M_pi_c
+		0.0	;	# 188 tRNA_charging_M_thr_L_c_CAT::13.0*M_thr_L_c+13.0*M_atp_c+13.0*tRNA --> 13.0*M_thr_L_c_tRNA+13.0*M_amp_c+26.0*M_pi_c
+		0.0	;	# 189 tRNA_charging_M_trp_L_c_CAT::5.0*M_trp_L_c+5.0*M_atp_c+5.0*tRNA --> 5.0*M_trp_L_c_tRNA+5.0*M_amp_c+10.0*M_pi_c
+		0.0	;	# 190 tRNA_charging_M_tyr_L_c_CAT::11.0*M_tyr_L_c+11.0*M_atp_c+11.0*tRNA --> 11.0*M_tyr_L_c_tRNA+11.0*M_amp_c+22.0*M_pi_c
+		0.0	;	# 191 tRNA_charging_M_val_L_c_CAT::16.0*M_val_L_c+16.0*M_atp_c+16.0*tRNA --> 16.0*M_val_L_c_tRNA+16.0*M_amp_c+32.0*M_pi_c
+		0.0	;	# 192 tNRA_exchange::[] --> tRNA
+		0.0	;	# 193 tNRA_exchange_reverse::tRNA --> []
+		-1.0	;	# 194 PROTEIN_export_CAT::PROTEIN_CAT --> []
+		0.0	;	# 195 M_o2_c_exchange::[] --> M_o2_c
+		0.0	;	# 196 M_co2_c_exchange::M_co2_c --> []
+		0.0	;	# 197 M_h_c_exchange::M_h_c --> []
+		0.0	;	# 198 M_h_c_exchange_reverse::[] --> M_h_c
+		0.0	;	# 199 M_h2s_c_exchange::[] --> M_h2s_c
+		0.0	;	# 200 M_h2s_c_exchange_reverse::M_h2s_c --> []
+		0.0	;	# 201 M_h2o_c_exchange::[] --> M_h2o_c
+		0.0	;	# 202 M_h2o_c_exchange_reverse::M_h2o_c --> []
+		0.0	;	# 203 M_pi_c_exchange::[] --> M_pi_c
+		0.0	;	# 204 M_pi_c_exchange_reverse::M_pi_c --> []
+		0.0	;	# 205 M_nh4_c_exchange::[] --> M_nh4_c
+		0.0	;	# 206 M_nh4_c_exchange_reverse::M_nh4_c --> []
+		0.0	;	# 207 M_glc_D_c_exchange::[] --> M_glc_D_c
+		0.0	;	# 208 M_glc_D_c_exchange_reverse::M_glc_D_c --> []
+		0.0	;	# 209 M_pyr_c_exchange::[] --> M_pyr_c
+		0.0	;	# 210 M_pyr_c_exchange_reverse::M_pyr_c --> []
+		0.0	;	# 211 M_ac_c_exchange::[] --> M_ac_c
+		0.0	;	# 212 M_ac_c_exchange_reverse::M_ac_c --> []
+		0.0	;	# 213 M_lac_D_c_exchange::[] --> M_lac_D_c
+		0.0	;	# 214 M_lac_D_c_exchange_reverse::M_lac_D_c --> []
+		0.0	;	# 215 M_hco3_c_exchange::[] --> M_hco3_c
+		0.0	;	# 216 M_hco3_c_exchange_reverse::M_hco3_c --> []
+		0.0	;	# 217 M_ala_L_c_exchange::[] --> M_ala_L_c
+		0.0	;	# 218 M_ala_L_c_exchange_reverse::M_ala_L_c --> []
+		0.0	;	# 219 M_arg_L_c_exchange::[] --> M_arg_L_c
+		0.0	;	# 220 M_arg_L_c_exchange_reverse::M_arg_L_c --> []
+		0.0	;	# 221 M_asn_L_c_exchange::[] --> M_asn_L_c
+		0.0	;	# 222 M_asn_L_c_exchange_reverse::M_asn_L_c --> []
+		0.0	;	# 223 M_asp_L_c_exchange::[] --> M_asp_L_c
+		0.0	;	# 224 M_asp_L_c_exchange_reverse::M_asp_L_c --> []
+		0.0	;	# 225 M_cys_L_c_exchange::[] --> M_cys_L_c
+		0.0	;	# 226 M_cys_L_c_exchange_reverse::M_cys_L_c --> []
+		0.0	;	# 227 M_glu_L_c_exchange::[] --> M_glu_L_c
+		0.0	;	# 228 M_glu_L_c_exchange_reverse::M_glu_L_c --> []
+		0.0	;	# 229 M_gln_L_c_exchange::[] --> M_gln_L_c
+		0.0	;	# 230 M_gln_L_c_exchange_reverse::M_gln_L_c --> []
+		0.0	;	# 231 M_gly_L_c_exchange::[] --> M_gly_L_c
+		0.0	;	# 232 M_gly_L_c_exchange_reverse::M_gly_L_c --> []
+		0.0	;	# 233 M_his_L_c_exchange::[] --> M_his_L_c
+		0.0	;	# 234 M_his_L_c_exchange_reverse::M_his_L_c --> []
+		0.0	;	# 235 M_ile_L_c_exchange::[] --> M_ile_L_c
+		0.0	;	# 236 M_ile_L_c_exchange_reverse::M_ile_L_c --> []
+		0.0	;	# 237 M_leu_L_c_exchange::[] --> M_leu_L_c
+		0.0	;	# 238 M_leu_L_c_exchange_reverse::M_leu_L_c --> []
+		0.0	;	# 239 M_lys_L_c_exchange::[] --> M_lys_L_c
+		0.0	;	# 240 M_lys_L_c_exchange_reverse::M_lys_L_c --> []
+		0.0	;	# 241 M_met_L_c_exchange::[] --> M_met_L_c
+		0.0	;	# 242 M_met_L_c_exchange_reverse::M_met_L_c --> []
+		0.0	;	# 243 M_phe_L_c_exchange::[] --> M_phe_L_c
+		0.0	;	# 244 M_phe_L_c_exchange_reverse::M_phe_L_c --> []
+		0.0	;	# 245 M_pro_L_c_exchange::[] --> M_pro_L_c
+		0.0	;	# 246 M_pro_L_c_exchange_reverse::M_pro_L_c --> []
+		0.0	;	# 247 M_ser_L_c_exchange::[] --> M_ser_L_c
+		0.0	;	# 248 M_ser_L_c_exchange_reverse::M_ser_L_c --> []
+		0.0	;	# 249 M_thr_L_c_exchange::[] --> M_thr_L_c
+		0.0	;	# 250 M_thr_L_c_exchange_reverse::M_thr_L_c --> []
+		0.0	;	# 251 M_trp_L_c_exchange::[] --> M_trp_L_c
+		0.0	;	# 252 M_trp_L_c_exchange_reverse::M_trp_L_c --> []
+		0.0	;	# 253 M_tyr_L_c_exchange::[] --> M_tyr_L_c
+		0.0	;	# 254 M_tyr_L_c_exchange_reverse::M_tyr_L_c --> []
+		0.0	;	# 255 M_val_L_c_exchange::[] --> M_val_L_c
+		0.0	;	# 256 M_val_L_c_exchange_reverse::M_val_L_c --> []
+		0.0	;	# 257 M_atp_exchange::M_atp_c --> []
 	];
 
 	# Min/Max flag - default is minimum -
