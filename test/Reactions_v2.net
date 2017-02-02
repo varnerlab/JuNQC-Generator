@@ -155,7 +155,6 @@ R_ndh1,M_h_c+M_nadh_c+M_q8_c,M_nad_c+M_q8h2_c,0,inf
 // NADH dehydrogenase (ndh)
 R_ndh2,M_h_c+M_mqn8_c+M_nadh_c,M_mql8_c+M_nad_c,0,inf
 
-R_hack1,M_atp_c+M_h2o_c,M_adp_c+M_h_c+M_pi_c,0,inf
 R_ppk,M_atp_c+M_pi_c,M_adp_c+M_ppi_c,0,inf
 
 // Inorganic pyrophosphatase (ppa)
@@ -466,10 +465,16 @@ R_gmp_syn,M_atp_c+M_xmp_c+M_gln_L_c+M_h2o_c,M_amp_c+M_ppi_c+M_gmp_c+M_glu_L_c,0,
 // ===============================================
 
 // EC 3.6.1.9
-R_atp_amp,M_atp_c+M_h2o_c,M_amp_c+M_ppi_c,0,inf
-R_utp_ump,M_utp_c+M_h2o_c,M_ump_c+M_ppi_c,0,inf
-R_ctp_cmp,M_ctp_c+M_h2o_c,M_cmp_c+M_ppi_c,0,inf
-R_gtp_gmp,M_gtp_c+M_h2o_c,M_gmp_c+M_ppi_c,0,inf
+R_atp_amp,M_atp_c+M_h2o_c,M_amp_c+M_ppi_c+M_h_c,0,inf
+R_utp_ump,M_utp_c+M_h2o_c,M_ump_c+M_ppi_c+M_h_c,0,inf
+R_ctp_cmp,M_ctp_c+M_h2o_c,M_cmp_c+M_ppi_c+M_h_c,0,inf
+R_gtp_gmp,M_gtp_c+M_h2o_c,M_gmp_c+M_ppi_c+M_h_c,0,inf
+
+// EC 3.6.1.3
+R_atp_adp,M_atp_c+M_h2o_c,M_adp_c+M_pi_c+M_h_c,0,inf
+R_utp_adp,M_utp_c+M_h2o_c,M_udp_c+M_pi_c+M_h_c,0,inf
+R_ctp_adp,M_ctp_c+M_h2o_c,M_cdp_c+M_pi_c+M_h_c,0,inf
+R_gtp_adp,M_gtp_c+M_h2o_c,M_gdp_c+M_pi_c+M_h_c,0,inf
 
 // EC 2.7.4.6
 R_udp_utp,M_udp_c+M_atp_c,M_utp_c+M_adp_c,0,inf
