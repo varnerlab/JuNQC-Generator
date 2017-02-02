@@ -134,9 +134,6 @@ R_app,2*M_h_c+M_mql8_c+0.5*M_o2_c,M_h2o_c+M_mqn8_c+2*M_h_e,0,inf
 // ATP synthase (atp)
 R_atp,M_adp_c+M_pi_c+4*M_h_e,M_atp_c+3*M_h_c+M_h2o_c,0,inf
 
-// Adenylate kinase (adk)
-R_adk,M_amp_c+M_atp_c,2*M_adp_c,0,inf
-
 // ===========================================
 // COFACTORS
 // ===========================================
@@ -486,6 +483,11 @@ R_atp_ump,M_atp_c+M_ump_c,M_adp_c+M_udp_c,0,inf
 R_atp_cmp,M_atp_c+M_cmp_c,M_adp_c+M_cdp_c,0,inf
 R_atp_gmp,M_atp_c+M_gmp_c,M_adp_c+M_gdp_c,0,inf
 
+// Adenylate kinase(s) (adk)
+R_adk_atp,M_amp_c+M_atp_c,2*M_adp_c,0,inf
+R_adk_utp,M_amp_c+M_utp_c,2*M_udp_c,0,inf
+R_adk_ctp,M_amp_c+M_ctp_c,2*M_cdp_c,0,inf
+R_adk_gtp,M_amp_c+M_gtp_c,2*M_gdp_c,0,inf
 
 // ===============================================
 // TRANSCRIPTION
