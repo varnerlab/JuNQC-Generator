@@ -1,16 +1,16 @@
-function generate_problem_object(metabolic_statement_vector::Array{VFFSentence})
+function generate_problem_object(metabolic_statement_vector::Array{VFFSentence},configuration_dictionary::Dict{String,Any})
 
   # Initilize an empty problem object -
   problem_object::ProblemObject = ProblemObject()
 
   # construct the array of species -
-  species_array::Array{SpeciesObject} = build_species_list(metabolic_statement_vector)
+  species_array::Array{SpeciesObject} = build_species_list(metabolic_statement_vector,configuration_dictionary)
 
   # Partition species -
   partition!(species_array)
 
   # construct the array of reactions -
-  reaction_array::Array{ReactionObject} = build_reaction_list(metabolic_statement_vector)
+  reaction_array::Array{ReactionObject} = build_reaction_list(metabolic_statement_vector,configuration_dictionary)
 
   # partition the reactions -
   partition!(reaction_array)
@@ -23,14 +23,17 @@ function generate_problem_object(metabolic_statement_vector::Array{VFFSentence})
   return problem_object
 end
 
-function build_species_list!(reaction_clause::AbstractString,list_of_species::Array{SpeciesObject})
+function build_species_list!(reaction_clause::AbstractString,list_of_species::Array{SpeciesObject},configuration_dictionary::Dict{String,Any})
+
+  # We need to set the unbalanced species (type :unbalanced)
+  unbalanced_species_suffix = configuration_dictionary["unbalanced_species_suffix"]["symbol"]
 
   if (contains(reaction_clause,"+") == true)
 
     # split around the +, and recursivley call me ..
     tmp_split_array = split(reaction_clause,"+")
     for fragment in tmp_split_array
-      build_species_list!(fragment,list_of_species)
+      build_species_list!(fragment,list_of_species,configuration_dictionary)
     end
 
   else
@@ -48,7 +51,13 @@ function build_species_list!(reaction_clause::AbstractString,list_of_species::Ar
         # Build the species object -
         species_object.species_index = 0.0
         species_object.species_type = :metabolite
-        species_object.species_bound_type = :balanced
+
+        if (contains(symbol[end-1:end],unbalanced_species_suffix) == true)
+          species_object.species_bound_type = :unbalanced
+        else
+          species_object.species_bound_type = :balanced
+        end
+
         species_object.species_symbol = symbol
         species_object.stoichiometric_coefficient = parse(Float64,coefficient)
         species_object.species_compartment = :reactor
@@ -66,7 +75,15 @@ function build_species_list!(reaction_clause::AbstractString,list_of_species::Ar
         # Build the species object -
         species_object.species_index = 0.0
         species_object.species_type = :metabolite
-        species_object.species_bound_type = :balanced
+
+        # R we unbalanced?
+
+        if (contains(symbol[end-1:end],unbalanced_species_suffix) == true)
+          species_object.species_bound_type = :unbalanced
+        else
+          species_object.species_bound_type = :balanced
+        end
+
         species_object.species_symbol = symbol
         species_object.stoichiometric_coefficient = coefficient
         species_object.species_compartment = :reactor
@@ -78,7 +95,7 @@ function build_species_list!(reaction_clause::AbstractString,list_of_species::Ar
   end
 end
 
-function build_species_list(statement_vector::Array{VFFSentence})
+function build_species_list(statement_vector::Array{VFFSentence},configuration_dictionary::Dict{String,Any})
 
   species_set::Set{AbstractString} = Set{AbstractString}()
   for vff_sentence in statement_vector
@@ -116,6 +133,9 @@ function build_species_list(statement_vector::Array{VFFSentence})
   # sort this in place (alphbetical ..)
   sort!(tmp_species_array)
 
+  # We need to set the unbalanced species (type :unbalanced)
+  unbalanced_species_suffix = configuration_dictionary["unbalanced_species_suffix"]["symbol"]
+
   # Finally ... build the list of SpeciesObjects -
   list_of_species = SpeciesObject[]
   for (index,species_symbol) in enumerate(tmp_species_array)
@@ -130,8 +150,17 @@ function build_species_list(statement_vector::Array{VFFSentence})
     species_object.species_index = index
     species_object.stoichiometric_coefficient = 0.0
     species_object.species_type = :metabolite
-    species_object.species_bound_type = :balanced
     species_object.species_compartment = :reactor
+
+    # check - do we have an unbalanced species?
+    if (contains(species_symbol[end-1:end],unbalanced_species_suffix) == true)
+      species_object.species_bound_type = :unbalanced
+    else
+      species_object.species_bound_type = :balanced
+    end
+
+
+
 
     # push -
     push!(list_of_species,species_object)
@@ -141,7 +170,7 @@ function build_species_list(statement_vector::Array{VFFSentence})
   return list_of_species
 end
 
-function build_reaction_list(statement_vector::Array{VFFSentence})
+function build_reaction_list(statement_vector::Array{VFFSentence},configuration_dictionary::Dict{String,Any})
 
   # Initialize an empty array -
   reaction_array::Array{ReactionObject} = ReactionObject[]
@@ -159,11 +188,11 @@ function build_reaction_list(statement_vector::Array{VFFSentence})
 
     # recatants -
     list_of_reactants::Array{SpeciesObject} = SpeciesObject[]
-    build_species_list!(reactant_string,list_of_reactants)
+    build_species_list!(reactant_string,list_of_reactants,configuration_dictionary)
 
     # products -
     list_of_products::Array{SpeciesObject} = SpeciesObject[]
-    build_species_list!(product_string,list_of_products)
+    build_species_list!(product_string,list_of_products,configuration_dictionary)
 
     # populate -
     reaction_object.is_reaction_reversible = false

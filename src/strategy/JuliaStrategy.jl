@@ -148,8 +148,6 @@ function build_data_dictionary_buffer(problem_object::ProblemObject)
   default_rate_constant = parse(Float64,default_parameter_dictionary["default_enzyme_kcat"])
   default_upper_bound = default_rate_constant*enzyme_initial_condition
 
-
-
   # initialize the buffer -
   buffer = ""
   buffer *= header_buffer
@@ -169,8 +167,32 @@ function build_data_dictionary_buffer(problem_object::ProblemObject)
 
   # generate species bounds constraints -
   buffer *= "\t# Setup default species bounds array - \n"
+  buffer *= "\tspecies_bounds_array = [\n";
 
+  list_of_species::Array{SpeciesObject} = problem_object.list_of_species
+  counter = 1
+  for (index,species_object) in enumerate(list_of_species)
 
+    # Get the bound type, and species -
+    species_bound_type = species_object.species_bound_type
+    species_symbol = species_object.species_symbol
+    if (species_bound_type == :unbalanced)
+
+      # this species is unbounded -
+      buffer *= "\t\t-1.0\t1.0\t;\t#"
+
+    else
+
+      # this species is bounded -
+      buffer *= "\t\t0.0\t0.0\t;\t#"
+    end
+
+    buffer *= " $(index) $(species_symbol)\n"
+  end
+
+  buffer *= "\t];\n"
+
+  buffer *= "\n"
   buffer *= "\t# Setup the objective coefficient array - \n"
   buffer *= "\tobjective_coefficient_array = [\n";
 
@@ -204,8 +226,8 @@ function build_data_dictionary_buffer(problem_object::ProblemObject)
   buffer *= "\tdata_dictionary[\"stoichiometric_matrix\"] = stoichiometric_matrix\n"
   buffer *= "\tdata_dictionary[\"objective_coefficient_array\"] = objective_coefficient_array\n"
   buffer *= "\tdata_dictionary[\"default_flux_bounds_array\"] = default_bounds_array;\n"
+  buffer *= "\tdata_dictionary[\"species_bounds_array\"] = species_bounds_array\n"
   buffer *= "\tdata_dictionary[\"is_minimum_flag\"] = is_minimum_flag\n"
-  buffer *= "\n"
   buffer *= "\t# =============================== DO NOT EDIT ABOVE THIS LINE ============================== #\n"
   buffer *= "\treturn data_dictionary\n"
   buffer *= "end\n"

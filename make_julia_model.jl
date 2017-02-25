@@ -39,11 +39,11 @@ function main()
   path_to_model_file = parsed_args["m"]
   metabolic_statement_vector::Array{VFFSentence} = parse_vff_metabolic_statements(path_to_model_file)
 
-  # Generate the problem object -
-  problem_object = generate_problem_object(metabolic_statement_vector)
-
   # Load the JSON configuration file -
   config_dict = JSON.parsefile("./config/Configuration.json")
+
+  # Generate the problem object -
+  problem_object = generate_problem_object(metabolic_statement_vector,config_dict)
   problem_object.configuration_dictionary = config_dict
 
   # Write the DataDictionary -

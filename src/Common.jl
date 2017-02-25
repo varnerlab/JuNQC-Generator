@@ -254,7 +254,6 @@ function partition!(list_of_species::Array{SpeciesObject})
 
   # ok, frist, we need to split into balanced and unbalanced lists -
   list_of_balanced_indexes::Array{Int} = Int[]
-  list_of_measured_indexes::Array{Int} = Int[]
   list_of_free_indexes::Array{Int} = Int[]
 
   for (index,species_object) in enumerate(list_of_species)
@@ -263,15 +262,13 @@ function partition!(list_of_species::Array{SpeciesObject})
     species_bound_type::Symbol = species_object.species_bound_type
     if (species_bound_type == :balanced)
       push!(list_of_balanced_indexes,index)
-    elseif (species_bound_type == :measured)
-      push!(list_of_measured_indexes,index)
-    elseif (species_bound_type == :free)
+    elseif (species_bound_type == :unbalanced)
       push!(list_of_free_indexes,index)
     end
   end
 
   # combine -
-  permutation_index_array = vcat(list_of_balanced_indexes,list_of_measured_indexes,list_of_free_indexes)
+  permutation_index_array = vcat(list_of_balanced_indexes,list_of_free_indexes)
 
   # permute the array -
   permute!(list_of_species,permutation_index_array)

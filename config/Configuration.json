@@ -21,6 +21,11 @@
     "default_zipcode":"14850"
   },
 
+  "unbalanced_species_suffix":{
+
+    "symbol":"_e"
+  },
+
   "function_comment_dictionary":{
 
     "data_dictionary_function":{
