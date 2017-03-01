@@ -219,6 +219,40 @@ function build_data_dictionary_buffer(problem_object::ProblemObject)
   buffer *= "\t# Min/Max flag - default is minimum - \n"
   buffer *= "\tis_minimum_flag = true\n"
 
+  # write the reaction string list -
+  counter = 1
+  buffer *= "\n"
+  buffer *= "\t# List of reation strings - used to write flux report \n"
+  buffer *= "\tlist_of_reaction_strings = [\n"
+  for (index,reaction_object) in enumerate(list_of_reactions)
+
+    reaction_string = reaction_object.reaction_name
+    reaction_type = reaction_object.reaction_type
+
+    # Build comment string -
+    comment_string = build_reaction_comment_string(reaction_object)
+    buffer *= "\t\t\"$(reaction_string)::$(comment_string)\"\n"
+
+    # update the counter -
+    counter = counter + 1;
+  end
+
+  buffer *= "\t];\n"
+
+  # wtite list of metabolite symbols -
+  counter = 1
+  buffer *= "\n"
+  buffer *= "\t# List of metabolite strings - used to write flux report \n"
+  buffer *= "\tlist_of_metabolite_symbols = [\n"
+  for (index,species_object) in enumerate(list_of_species)
+
+    # Get the bound type, and species -
+    species_bound_type = species_object.species_bound_type
+    species_symbol = species_object.species_symbol
+    buffer *= "\t\t\"$(species_symbol)\"\n"
+  end
+  buffer *= "\t];\n"
+
   # return block -
   buffer *= "\n"
   buffer *= "\t# =============================== DO NOT EDIT BELOW THIS LINE ============================== #\n"
@@ -227,6 +261,8 @@ function build_data_dictionary_buffer(problem_object::ProblemObject)
   buffer *= "\tdata_dictionary[\"objective_coefficient_array\"] = objective_coefficient_array\n"
   buffer *= "\tdata_dictionary[\"default_flux_bounds_array\"] = default_bounds_array;\n"
   buffer *= "\tdata_dictionary[\"species_bounds_array\"] = species_bounds_array\n"
+  buffer *= "\tdata_dictionary[\"list_of_reaction_strings\"] = list_of_reaction_strings\n"
+  buffer *= "\tdata_dictionary[\"list_of_metabolite_symbols\"] = list_of_metabolite_symbols\n"
   buffer *= "\tdata_dictionary[\"is_minimum_flag\"] = is_minimum_flag\n"
   buffer *= "\t# =============================== DO NOT EDIT ABOVE THIS LINE ============================== #\n"
   buffer *= "\treturn data_dictionary\n"
