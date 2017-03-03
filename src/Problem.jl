@@ -77,13 +77,7 @@ function build_species_list!(reaction_clause::AbstractString,list_of_species::Ar
         species_object.species_type = :metabolite
 
         # R we unbalanced?
-
-        if (contains(symbol[end-1:end],unbalanced_species_suffix) == true)
-          species_object.species_bound_type = :unbalanced
-        else
-          species_object.species_bound_type = :balanced
-        end
-
+        species_object.species_bound_type = balanced_or_unbalanced(symbol,unbalanced_species_suffix)
         species_object.species_symbol = symbol
         species_object.stoichiometric_coefficient = coefficient
         species_object.species_compartment = :reactor
@@ -153,14 +147,7 @@ function build_species_list(statement_vector::Array{VFFSentence},configuration_d
     species_object.species_compartment = :reactor
 
     # check - do we have an unbalanced species?
-    if (contains(species_symbol[end-1:end],unbalanced_species_suffix) == true)
-      species_object.species_bound_type = :unbalanced
-    else
-      species_object.species_bound_type = :balanced
-    end
-
-
-
+    species_object.species_bound_type = balanced_or_unbalanced(species_symbol,unbalanced_species_suffix)
 
     # push -
     push!(list_of_species,species_object)
@@ -250,4 +237,14 @@ function build_species_set_from_clause(reaction_clause::AbstractString)
   end
 
   return species_symbol_set
+end
+
+function balanced_or_unbalanced(species_symbol,unbalanced_species_suffix)
+
+  species_bound_type = :balanced
+  if (length(species_symbol)>1 && contains(species_symbol[end-1:end],unbalanced_species_suffix) == true)
+    species_bound_type = :unbalanced
+  end
+
+  return species_bound_type
 end

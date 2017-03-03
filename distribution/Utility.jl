@@ -26,7 +26,54 @@ function generate_net_reaction(index_reactions::Array{Int64,1},data_dictionary::
   # get the stoichiometric matrix -
   stoichiometric_matrix = data_dictionary["stoichiometric_matrix"]
 
-  # ok, combine the cols in index_reactions -
-  
+  # get list of metabolite symbols -
+  list_of_metabolite_symbols = data_dictionary["list_of_metabolite_symbols"]
 
+  # ok, combine the cols in index_reactions -
+  coefficient_array = sum(stoichiometric_matrix[:,index_reactions],2)
+
+  # which elememts are positive (products)?
+  idx_product_array = find(coefficient_array.>0)
+
+  # which elements are negative (reactants?)
+  idx_reactant_array = find(coefficient_array.<0)
+
+  # build the string ...
+  net_reaction_buffer = ""
+  for idx_reactant in idx_reactant_array
+
+    metabolite_symbol = list_of_metabolite_symbols[idx_reactant]
+    st_coeff = abs(coefficient_array[idx_reactant])
+
+    if (st_coeff != 1.0)
+      net_reaction_buffer *= "$(st_coeff)*$(metabolite_symbol) + "
+    else
+      net_reaction_buffer *= "$(metabolite_symbol) + "
+    end
+  end
+
+  # cutoff trailing * -
+  net_reaction_buffer = net_reaction_buffer[1:end-3]
+
+  # add the arrow -
+  net_reaction_buffer *= " --> "
+
+  # write the trailing stuff -
+  for idx_product in idx_product_array
+
+    metabolite_symbol = list_of_metabolite_symbols[idx_product]
+    st_coeff = abs(coefficient_array[idx_product])
+
+    if (st_coeff != 1.0)
+      net_reaction_buffer *= "$(st_coeff)*$(metabolite_symbol) + "
+    else
+      net_reaction_buffer *= "$(metabolite_symbol) + "
+    end
+  end
+
+  # cutoff trailing * -
+  net_reaction_buffer = net_reaction_buffer[1:end-3]
+
+  # return -
+  return net_reaction_buffer
 end
