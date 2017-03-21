@@ -69,6 +69,8 @@ function main()
   transfer_distribution_file("./distribution","Include.jl",path_to_output_file,"Include.jl")
   transfer_distribution_file("./distribution","Utility.jl",path_to_output_file,"Utility.jl")
   transfer_distribution_file("./distribution","README_INCLUDE.md",path_to_output_file,"README.md")
+  transfer_distribution_file("./distribution","Atom.csv",path_to_output_file,"Atom.txt")
+
 end
 
 main()
