@@ -28,7 +28,7 @@ in the Julia REPL. Lastly, the generated code uses the Julia plugin for the [GLP
 
 in the Julia REPL.
 
-### FBA code generation
+### How do I generate FBA code?
 To generate flux balance analysis code, issue the command ``make_julia_model.jl`` from the command line:
 
 	$ julia make_julia_model.jl -m <input path> -o <output path>
@@ -58,17 +58,15 @@ For example, the first few steps in glycolysis are written as:
 	// [] = system (not tracked)
 	// ----------------------------------------------------------------------------------- //
 
-	// Glucokinase (glk)
+	
+	// Phosphoglucose isomerase (pgi)
 	R_pgi,M_g6p_c,M_f6p_c,-inf,inf
 
-	// Phosphoglucose isomerase (pgi)
+	// Phosphofructokinase (pfk)
 	R_pfk,M_atp_c+M_f6p_c,M_adp_c+M_fdp_c+M_h_c,0,inf
 
-	// Phosphofructokinase (pfk)
-	R_fdp,M_fdp_c+M_h2o_c,M_f6p_c+M_pi_c,0,inf
-
 	// Fructose-1,6-bisphosphate aldolase (fdp)
-	R_fbaA,M_fdp_c,M_dhap_c+M_g3p_c,-inf,inf
+	R_fdp,M_fdp_c+M_h2o_c,M_f6p_c+M_pi_c,0,inf
 	
 	// R_FUMt2_2::Fumarate transport via proton symport (2 H)
 	R_FUMt2_2,M_fum_e+2.0*M_h_e,M_fum_c+2.0*M_h_c,0,inf
