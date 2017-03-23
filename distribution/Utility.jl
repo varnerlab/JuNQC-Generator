@@ -57,17 +57,16 @@ function generate_atom_matrix(path_to_atom_file::AbstractString,data_dictionary:
 
       # local array -
       local_atom_array = zeros(6)
-      local_atom_array[1] = split_array[2] # C
-      local_atom_array[2] = split_array[3] # H
-      local_atom_array[3] = split_array[4] # N
-      local_atom_array[4] = split_array[5] # O
-      local_atom_array[5] = split_array[6] # P
-      local_atom_array[6] = split_array[7] # S
+      local_atom_array[1] = parse(Float64,split_array[2]) # C
+      local_atom_array[2] = parse(Float64,split_array[3]) # H
+      local_atom_array[3] = parse(Float64,split_array[4]) # N
+      local_atom_array[4] = parse(Float64,split_array[5]) # O
+      local_atom_array[5] = parse(Float64,split_array[6]) # P
+      local_atom_array[6] = parse(Float64,split_array[7]) # S
 
       # store -
       local_dictionary[key] = local_atom_array
     end
-
 
     # ok, so now we have the local dictionary, we can lookup (in order) the metabolites in the model -
     for (index,model_metabolite_symbol) in enumerate(list_of_metabolite_symbols_model)
