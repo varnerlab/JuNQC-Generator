@@ -36,7 +36,7 @@ function generate_atom_matrix(path_to_atom_file::AbstractString,data_dictionary:
   # load the atom file -
   try
 
-    open(path_to_model_file,"r") do model_file
+    open(path_to_atom_file,"r") do model_file
       for line in eachline(model_file)
 
           if (contains(line,"//") == false && search(line,"\n")[1] != 1)
