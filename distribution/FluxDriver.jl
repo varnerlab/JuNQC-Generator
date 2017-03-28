@@ -1,8 +1,8 @@
 # ----------------------------------------------------------------------------------- #
-# Copyright (c) 2016 Varnerlab
-# School of Chemical Engineering Purdue University
-# W. Lafayette IN 46907 USA
-
+# Copyright (c) 2017 Varnerlab
+# Robert Frederick Smith School of Chemical and Biomolecular Engineering
+# Cornell University, Ithaca NY 14850
+#
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
 # in the Software without restriction, including without limitation the rights
@@ -156,9 +156,12 @@ for flux_index in flux_index_vector
 	dual_value_array[flux_index] = GLPK.get_col_dual(lp_problem, flux_index);
 end
 
+# is this solution optimal?
+status_flag = GLPK.get_status(lp_problem)
+
 # Calculate the uptake array -
 uptake_array = stoichiometric_matrix*calculated_flux_array;
 
 # Formulate the return tuple -
-return (objective_value, calculated_flux_array, dual_value_array, uptake_array, exit_flag);
+return (objective_value, calculated_flux_array, dual_value_array, uptake_array, status_flag);
 end
