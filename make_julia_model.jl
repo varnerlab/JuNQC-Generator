@@ -48,16 +48,22 @@ function main()
 
   # Write the DataDictionary -
   component_set = Set{ProgramComponent}()
-  program_component_data_dictionary = build_data_dictionary_buffer(problem_object)
-  push!(component_set,program_component_data_dictionary)
-
-  # Write the stoichiometric_matrix --
-  program_component_stoichiometric_matrix = generate_stoichiomteric_matrix_buffer(problem_object)
-  push!(component_set,program_component_stoichiometric_matrix)
 
   # write debug buffer -
   program_component_debug = build_debug_buffer(problem_object)
   push!(component_set,program_component_debug)
+  progress_message = "constructed the debug buffer ..."
+  println(progress_message)
+
+  # data dictionary -
+  program_component_data_dictionary = build_data_dictionary_buffer(problem_object)
+  push!(component_set,program_component_data_dictionary)
+  progress_message = "constructed the data_dictionary buffer ..."
+  println(progress_message)
+
+  # Write the stoichiometric_matrix --
+  program_component_stoichiometric_matrix = generate_stoichiomteric_matrix_buffer(problem_object)
+  push!(component_set,program_component_stoichiometric_matrix)
 
   # Dump the component_set to disk -
   path_to_output_file = parsed_args["o"]

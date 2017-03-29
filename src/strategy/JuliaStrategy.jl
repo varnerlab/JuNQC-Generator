@@ -126,6 +126,7 @@ function build_debug_buffer(problem_object::ProblemObject)
   program_component::ProgramComponent = ProgramComponent()
   program_component.filename = filename
   program_component.buffer = buffer
+  program_component.component_type = :buffer
 
   # return -
   return (program_component)
@@ -141,6 +142,9 @@ function build_data_dictionary_buffer(problem_object::ProblemObject)
   # get the comment buffer -
   comment_header_dictionary = problem_object.configuration_dictionary["function_comment_dictionary"]["data_dictionary_function"]
   function_comment_buffer = build_function_header_buffer(comment_header_dictionary)
+
+  debug_message = "DataDictionary - finished building the copyright and function headers..."
+  println(debug_message)
 
   # Get the default -
   default_parameter_dictionary = problem_object.configuration_dictionary["default_parameter_dictionary"]
@@ -170,12 +174,17 @@ function build_data_dictionary_buffer(problem_object::ProblemObject)
   buffer *= "\tspecies_bounds_array = [\n";
 
   list_of_species::Array{SpeciesObject} = problem_object.list_of_species
+  number_of_species = length(list_of_species)
   counter = 1
-  for (index,species_object) in enumerate(list_of_species)
+  for species_object in list_of_species
 
     # Get the bound type, and species -
     species_bound_type = species_object.species_bound_type
     species_symbol = species_object.species_symbol
+
+    debug_message = "Processing $(species_symbol) index $(counter) of $(number_of_species)"
+    println(debug_message)
+
     if (species_bound_type == :unbalanced)
 
       # this species is unbounded -
@@ -187,10 +196,14 @@ function build_data_dictionary_buffer(problem_object::ProblemObject)
       buffer *= "\t\t0.0\t0.0\t;\t#"
     end
 
-    buffer *= " $(index) $(species_symbol)\n"
+    buffer *= " $(counter) $(species_symbol)\n"
+    counter = counter+1
   end
 
   buffer *= "\t];\n"
+
+  debug_message = "DataDictionary - finished building the species bounds array ..."
+  println(debug_message)
 
   buffer *= "\n"
   buffer *= "\t# Setup the objective coefficient array - \n"
@@ -199,7 +212,8 @@ function build_data_dictionary_buffer(problem_object::ProblemObject)
   # What species are calculated? ()
   counter = 1
   list_of_reactions::Array{ReactionObject} = problem_object.list_of_reactions
-  for (index,reaction_object) in enumerate(list_of_reactions)
+  number_of_reactions = length(list_of_reactions)
+  for reaction_object in list_of_reactions
 
     reaction_string = reaction_object.reaction_name
     reaction_type = reaction_object.reaction_type
@@ -208,11 +222,17 @@ function build_data_dictionary_buffer(problem_object::ProblemObject)
     comment_string = build_reaction_comment_string(reaction_object)
     buffer *= "\t\t0.0\t;\t# $(counter) $(reaction_string)::$(comment_string)\n"
 
+    debug_message = "Processing $(reaction_string) index $(counter) of $(number_of_reactions)"
+    println(debug_message)
+
     # update the counter -
     counter = counter + 1;
   end
 
   buffer *= "\t];\n"
+
+  debug_message = "DataDictionary - finished building the reactions bounds array ..."
+  println(debug_message)
 
   # set min/max flag -
   buffer *= "\n"
@@ -224,10 +244,13 @@ function build_data_dictionary_buffer(problem_object::ProblemObject)
   buffer *= "\n"
   buffer *= "\t# List of reation strings - used to write flux report \n"
   buffer *= "\tlist_of_reaction_strings = [\n"
-  for (index,reaction_object) in enumerate(list_of_reactions)
+  for reaction_object in list_of_reactions
 
     reaction_string = reaction_object.reaction_name
     reaction_type = reaction_object.reaction_type
+
+    debug_message = "Processing $(reaction_string) index $(counter) of $(number_of_reactions)"
+    println(debug_message)
 
     # Build comment string -
     comment_string = build_reaction_comment_string(reaction_object)
@@ -239,17 +262,25 @@ function build_data_dictionary_buffer(problem_object::ProblemObject)
 
   buffer *= "\t];\n"
 
+  debug_message = "DataDictionary - finished building the reaction string array ..."
+  println(debug_message)
+
   # wtite list of metabolite symbols -
   counter = 1
   buffer *= "\n"
   buffer *= "\t# List of metabolite strings - used to write flux report \n"
   buffer *= "\tlist_of_metabolite_symbols = [\n"
-  for (index,species_object) in enumerate(list_of_species)
+  for species_object in list_of_species
 
     # Get the bound type, and species -
     species_bound_type = species_object.species_bound_type
     species_symbol = species_object.species_symbol
     buffer *= "\t\t\"$(species_symbol)\"\n"
+
+    # debug -
+    debug_message = "Processing species symbol $(species_symbol) (index $(counter) of $(number_of_species))"
+    println(debug_message)
+    counter = counter + 1
   end
   buffer *= "\t];\n"
 
@@ -272,6 +303,7 @@ function build_data_dictionary_buffer(problem_object::ProblemObject)
   program_component::ProgramComponent = ProgramComponent()
   program_component.filename = filename
   program_component.buffer = buffer
+  program_component.component_type = :buffer
 
   # return -
   return (program_component)

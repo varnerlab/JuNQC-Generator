@@ -5,15 +5,29 @@ function write_program_components_to_disk(file_path::AbstractString,set_of_progr
 
     # Get the data -
     filename = program_component.filename
-    program_buffer = program_component.buffer
+    component_type = program_component.component_type
 
     # build the path -
     path_to_program_file = file_path*"/"*filename
 
-    # Write the file -
-    outfile = open(path_to_program_file, "w")
-    write(outfile,program_buffer);
-    close(outfile);
+    if (component_type == :buffer)
+
+      # get the buffer -
+      program_buffer = program_component.buffer
+
+      # Write the file -
+      outfile = open(path_to_program_file, "w")
+      write(outfile,program_buffer);
+      close(outfile);
+
+    elseif (component_type == :matrix)
+
+      # get the matrix -
+      program_matrix = program_component.matrix
+
+      # Write the file -
+      writedlm(path_to_program_file,program_matrix)
+    end
   end
 end
 
@@ -338,10 +352,27 @@ function generate_stoichiomteric_matrix_buffer(problem_object::ProblemObject)
   # build the buffer -
   list_of_species::Array{SpeciesObject} = problem_object.list_of_species
   list_of_reactions::Array{ReactionObject} = problem_object.list_of_reactions
+
+  # get the size of the system -
+  number_of_species = length(list_of_species)
+  number_of_reactions = length(list_of_reactions)
+
+  # setup the size -
+  species_counter = 1
+
+
+  # initialize stmatrix -
+  stoichiometric_matrix = zeros(number_of_species,number_of_reactions)
+
+  # main loop -
   for species_object in list_of_species
 
-    #@show species_object
+    species_symbol = species_object.species_symbol
+    debug_message = "STM - processing species $(species_symbol) ($(species_counter) of $(number_of_species)) ... "
+    println(debug_message)
 
+    #@show species_object
+      reaction_counter = 1
       for reaction_object in list_of_reactions
 
         #@show reaction_object
@@ -351,22 +382,26 @@ function generate_stoichiomteric_matrix_buffer(problem_object::ProblemObject)
 
           # ok, we have a *reactant* - get the st coefficient, multiply by -1 and add it to the buffer
           stoichiometric_coefficient = get_stoichiometric_coefficient(species_object,reaction_object,:reactant)
-          buffer *= " -$(stoichiometric_coefficient) "
+          stoichiometric_matrix[species_counter,reaction_counter] = -1.0*stoichiometric_coefficient
+          #buffer *= " -$(stoichiometric_coefficient) "
 
         elseif (is_species_a_product_in_reaction(species_object,reaction_object))
 
           # ok, we have a *product* - get the st coefficient, and add it to the buffer
           stoichiometric_coefficient = get_stoichiometric_coefficient(species_object,reaction_object,:product)
-          buffer *= " $(stoichiometric_coefficient) "
-        else
-
-          # this species is *not* involved in this reaction - coefficient is zero
-          buffer *= " 0.0 "
+          stoichiometric_matrix[species_counter,reaction_counter] = stoichiometric_coefficient
+          #buffer *= " $(stoichiometric_coefficient) "
         end
+
+        # update the reaction counter -
+        reaction_counter = reaction_counter + 1
       end
 
       # add the new line -
-      buffer *= "\n"
+      # buffer *= "\n"
+
+      # update counter -
+      species_counter = species_counter + 1
   end
 
 
@@ -374,7 +409,8 @@ function generate_stoichiomteric_matrix_buffer(problem_object::ProblemObject)
   filename = "Network.dat"
   program_component::ProgramComponent = ProgramComponent()
   program_component.filename = filename
-  program_component.buffer = buffer
+  program_component.matrix = stoichiometric_matrix
+  program_component.component_type = :matrix
 
   # return -
   return (program_component)

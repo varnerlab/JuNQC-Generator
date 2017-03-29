@@ -19,8 +19,10 @@ end
 
 type ProgramComponent
 
+  component_type::Symbol
   filename::AbstractString
   buffer::AbstractString
+  matrix::Array{Float64,2}
 
   function ProgramComponent()
     this = new()
