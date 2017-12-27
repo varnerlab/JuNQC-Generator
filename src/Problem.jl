@@ -52,6 +52,9 @@ function build_species_list!(reaction_clause::AbstractString,list_of_species::Ar
         species_object.species_index = 0.0
         species_object.species_type = :metabolite
 
+        # how many chars is the 
+
+
         if (contains(symbol[end-1:end],unbalanced_species_suffix) == true)
           species_object.species_bound_type = :unbalanced
         else

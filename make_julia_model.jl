@@ -23,6 +23,11 @@ function parse_commandline()
         help = "Path to the biochemical reaction file written in the vff format."
         arg_type = AbstractString
         required = true
+
+        "-s"
+        help = "Host type: bacteria or mammalian?"
+        arg_type = Symbol
+        default = :bacteria
     end
 
     # return a dictionary w/args -
@@ -56,7 +61,8 @@ function main()
   println(progress_message)
 
   # data dictionary -
-  program_component_data_dictionary = build_data_dictionary_buffer(problem_object)
+  host_type = parsed_args["s"]
+  program_component_data_dictionary = build_data_dictionary_buffer(problem_object,host_type)
   push!(component_set,program_component_data_dictionary)
   progress_message = "constructed the data_dictionary buffer ..."
   println(progress_message)

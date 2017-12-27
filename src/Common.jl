@@ -106,7 +106,10 @@ function transfer_distribution_file(path_to_distribution_files::AbstractString,
   path_to_src_file = path_to_distribution_files*"/"*input_file_name_with_extension
   open(path_to_src_file,"r") do src_file
     for line in eachline(src_file)
-      push!(src_buffer,line)
+
+        # need to add a new line for some reason in Julia 0.6
+        new_line_with_line_ending = line*"\n"
+        push!(src_buffer,new_line_with_line_ending)
     end
   end
 

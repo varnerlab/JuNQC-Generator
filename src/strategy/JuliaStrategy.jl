@@ -132,7 +132,7 @@ function build_debug_buffer(problem_object::ProblemObject)
   return (program_component)
 end
 
-function build_data_dictionary_buffer(problem_object::ProblemObject)
+function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::Symbol)
 
   filename = "DataDictionary.jl"
 
@@ -161,6 +161,11 @@ function build_data_dictionary_buffer(problem_object::ProblemObject)
   buffer *= "\n"
   buffer *= "\t# Load the stoichiometric network from disk - \n"
   buffer *= "\tstoichiometric_matrix = readdlm(\"Network.dat\");\n"
+
+  # how many states and rates?
+  buffer *= "\n"
+  buffer *= "\t# What is the system dimension? - \n"
+  buffer *= "\t(number_of_species,number_of_reactions) = size(stoichiometric_matrix)\n"
 
   # generate flux bounds array -
   buffer *= "\n"
@@ -283,6 +288,19 @@ function build_data_dictionary_buffer(problem_object::ProblemObject)
     counter = counter + 1
   end
   buffer *= "\t];\n"
+  buffer *= "\n"
+
+  if host_flag == :bacteria
+    buffer *= @include_function("txtl_constants_ecoli","\t")
+  else
+    buffer *= @include_function("txtl_constants_hl60","\t")
+  end
+  buffer *= "\n"
+
+  # put the misc dictionary -
+  buffer *= "\n"
+  buffer *= @include_function("txtl_parameter_dictionary","\t")
+  buffer *= "\n"
 
   # return block -
   buffer *= "\n"
@@ -295,6 +313,9 @@ function build_data_dictionary_buffer(problem_object::ProblemObject)
   buffer *= "\tdata_dictionary[\"list_of_reaction_strings\"] = list_of_reaction_strings\n"
   buffer *= "\tdata_dictionary[\"list_of_metabolite_symbols\"] = list_of_metabolite_symbols\n"
   buffer *= "\tdata_dictionary[\"is_minimum_flag\"] = is_minimum_flag\n"
+  buffer *= "\tdata_dictionary[\"number_of_species\"] = number_of_species\n"
+  buffer *= "\tdata_dictionary[\"number_of_reactions\"] = number_of_reactions\n"
+  buffer *= "\tdata_dictionary[\"txtl_parameter_dictionary\"] = txtl_parameter_dictionary\n"
   buffer *= "\t# =============================== DO NOT EDIT ABOVE THIS LINE ============================== #\n"
   buffer *= "\treturn data_dictionary\n"
   buffer *= "end\n"

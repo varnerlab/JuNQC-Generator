@@ -64,7 +64,7 @@ function parse_vff_metabolic_statements(path_to_model_file::AbstractString)
     open(path_to_model_file,"r") do model_file
       for line in eachline(model_file)
 
-          if (contains(line,"//") == false && search(line,"\n")[1] != 1)
+          if (contains(line,"//") == false && search(line,"\n") == 0:-1 && line != "")
             push!(tmp_array,chomp(line))
           end
       end
@@ -72,17 +72,20 @@ function parse_vff_metabolic_statements(path_to_model_file::AbstractString)
 
     for sentence in tmp_array
 
+      # convert substring to string -
+      local_sentence = convert(String,sentence)
+
       # Check the current pragma -
-      if (contains(sentence,"#pragma") == true)
+      if (contains(local_sentence,"#pragma") == true)
 
         # Extract the current handler -
-        current_handler_symbol = extract_vff_handler_symbol(sentence)
+        current_handler_symbol = extract_vff_handler_symbol(local_sentence)
       end
 
       # Depending upon the handler_symbol, we will process diff types of records -
-      if (current_handler_symbol == desired_handler_symbol && contains(sentence,"#pragma") == false)
+      if (current_handler_symbol == desired_handler_symbol && contains(local_sentence,"#pragma") == false)
 
-        local_vff_sentence_array = vff_metabolic_sentence_factory(sentence,current_handler_symbol)
+        local_vff_sentence_array = vff_metabolic_sentence_factory(local_sentence,current_handler_symbol)
         for local_vff_sentence in collect(local_vff_sentence_array)
           push!(expanded_sentence_vector,local_vff_sentence)
         end
