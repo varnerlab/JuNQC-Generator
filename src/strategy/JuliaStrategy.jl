@@ -174,12 +174,35 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
   buffer *= default_bounds_array
   buffer *= "\n"
 
+  # generate initial condition array -
+  buffer *= "\n"
+  buffer *= "\t# Setup species abundance array - \n"
+  buffer *= "\tspecies_abundance_array = [\n";
+  list_of_species::Array{SpeciesObject} = problem_object.list_of_species
+  number_of_species = length(list_of_species)
+  counter = 1
+  for species_object in list_of_species
+
+      # Get the bound type, and species -
+      species_bound_type = species_object.species_bound_type
+      species_symbol = species_object.species_symbol
+
+      debug_message = "Processing $(species_symbol) index $(counter) of $(number_of_species)"
+      println(debug_message)
+
+      # update buffer -
+      buffer *= "\t\t0.0\t;\t#"
+      buffer *= " $(counter) $(species_symbol)\n"
+      counter = counter+1
+  end
+
+  buffer *= "\t];\n"
+
   # generate species bounds constraints -
+  buffer *= "\n"
   buffer *= "\t# Setup default species bounds array - \n"
   buffer *= "\tspecies_bounds_array = [\n";
 
-  list_of_species::Array{SpeciesObject} = problem_object.list_of_species
-  number_of_species = length(list_of_species)
   counter = 1
   for species_object in list_of_species
 
@@ -309,6 +332,7 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
   buffer *= "\tdata_dictionary[\"stoichiometric_matrix\"] = stoichiometric_matrix\n"
   buffer *= "\tdata_dictionary[\"objective_coefficient_array\"] = objective_coefficient_array\n"
   buffer *= "\tdata_dictionary[\"default_flux_bounds_array\"] = default_bounds_array;\n"
+  buffer *= "\tdata_dictionary[\"species_abundance_array\"] = species_abundance_array\n"
   buffer *= "\tdata_dictionary[\"species_bounds_array\"] = species_bounds_array\n"
   buffer *= "\tdata_dictionary[\"list_of_reaction_strings\"] = list_of_reaction_strings\n"
   buffer *= "\tdata_dictionary[\"list_of_metabolite_symbols\"] = list_of_metabolite_symbols\n"

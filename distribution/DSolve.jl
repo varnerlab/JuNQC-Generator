@@ -4,14 +4,17 @@ include("Include.jl")
 
 # update the flux bounds -
 function update_flux_bounds_array(time,time_step_size,state_array,data_dictionary)
+    return user_update_flux_bounds(time,time_step_size,state_array,data_dictionary)
 end
 
 # update the species bounds -
 function update_species_bounds_array(time,time_step_size,state_array,data_dictionary)
+    return user_update_species_bounds(time,time_step_size,state_array,data_dictionary)
 end
 
-# update the species array -
+# update the state array -
 function time_stepping_routine(time,time_step_size,state_array,data_dictionary)
+    return user_time_stepping_routine(time,time_step_size,state_array,data_dictionary)
 end
 
 # main execution method -
@@ -27,7 +30,7 @@ function main(time_start::Float64,time_stop::Float64,time_step_size::Float64,dat
     state_archive = zeros(1,number_of_species)
 
     # get the initial condition array -
-    initial_condition_array = data_dictionary["initial_condition_array"]
+    initial_condition_array = data_dictionary["species_abundance_array"]
 
     # setup current state -
     current_state = initial_condition_array
@@ -51,6 +54,7 @@ function main(time_start::Float64,time_stop::Float64,time_step_size::Float64,dat
         else
 
             # archive data, go around again -
+
             # archive time -
             push!(time_archive,current_time)
 
@@ -74,4 +78,8 @@ time_step_size = 0.1    # hr
 data_dictionary = DataDictionary(time_start,time_stop,time_step_size)
 
 # call main -
-main()
+(time_archive,state_archive) = main(time_start,time_stop,time_step_size,data_dictionary)
+
+# output method -
+# ...
+#  ============ setup call to main ============================================ #
