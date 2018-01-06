@@ -52,7 +52,7 @@ function build_species_list!(reaction_clause::AbstractString,list_of_species::Ar
         species_object.species_index = 0.0
         species_object.species_type = :metabolite
 
-        # how many chars is the 
+        # how many chars is the
 
 
         if (contains(symbol[end-1:end],unbalanced_species_suffix) == true)
@@ -97,10 +97,6 @@ function build_species_list(statement_vector::Array{VFFSentence},configuration_d
   species_set::Set{AbstractString} = Set{AbstractString}()
   for vff_sentence in statement_vector
 
-    # grab the handler -
-    handler_symbol = vff_sentence.sentence_handler
-    if (handler_symbol == :metabolic_reaction_handler)
-
       # grab the reactant and prodict strings -
       reactant_string = vff_sentence.sentence_reactant_clause
       product_string = vff_sentence.sentence_product_clause
@@ -117,8 +113,6 @@ function build_species_list(statement_vector::Array{VFFSentence},configuration_d
       for item in product_set
         push!(species_set,item)
       end
-
-    end
   end
 
   # ok, I have a set of symbols = it should be unique, sort and then create an array of SpeciesObjets -
@@ -175,6 +169,8 @@ function build_reaction_list(statement_vector::Array{VFFSentence},configuration_
     reactant_string = vff_sentence.sentence_reactant_clause
     product_string = vff_sentence.sentence_product_clause
     enyzme_generation_flag = vff_sentence.sentence_type_flag
+    reaction_type_flag = vff_sentence.sentence_type_flag
+
 
     # recatants -
     list_of_reactants::Array{SpeciesObject} = SpeciesObject[]
@@ -190,6 +186,7 @@ function build_reaction_list(statement_vector::Array{VFFSentence},configuration_
     reaction_object.list_of_reactants = list_of_reactants
     reaction_object.list_of_products = list_of_products
     reaction_object.reaction_name = vff_sentence.sentence_name
+    reaction_object.reaction_type_flag = reaction_type_flag
 
     # store -
     push!(reaction_array,reaction_object)

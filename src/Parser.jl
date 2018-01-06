@@ -55,8 +55,8 @@ function parse_vff_metabolic_statements(path_to_model_file::AbstractString)
   sentence_vector = VFFSentence[]
   expanded_sentence_vector::Array{VFFSentence} = VFFSentence[]
   tmp_array::Array{AbstractString} = AbstractString[]
-  desired_handler_symbol::Symbol = :metabolic_reaction_handler
-  current_handler_symbol::Symbol = :metabolic_reaction_handler
+  desired_handler_symbol::Symbol = :metabolism_handler
+  current_handler_symbol::Symbol = :metabolism_handler
 
   try
 
@@ -82,14 +82,41 @@ function parse_vff_metabolic_statements(path_to_model_file::AbstractString)
         current_handler_symbol = extract_vff_handler_symbol(local_sentence)
       end
 
-      # Depending upon the handler_symbol, we will process diff types of records -
-      if (current_handler_symbol == desired_handler_symbol && contains(local_sentence,"#pragma") == false)
+        # Depending upon the handler_symbol, we will process diff types of records -
+        if (current_handler_symbol == desired_handler_symbol && contains(local_sentence,"#pragma") == false)
 
-        local_vff_sentence_array = vff_metabolic_sentence_factory(local_sentence,current_handler_symbol)
-        for local_vff_sentence in collect(local_vff_sentence_array)
-          push!(expanded_sentence_vector,local_vff_sentence)
+            local_vff_sentence_array = vff_metabolic_sentence_factory(local_sentence,current_handler_symbol)
+            for local_vff_sentence in collect(local_vff_sentence_array)
+              push!(expanded_sentence_vector,local_vff_sentence)
+            end
+        elseif (current_handler_symbol == :transcription_handler && contains(local_sentence,"#pragma") == false)
+
+            local_vff_sentence_array = vff_transcription_sentence_factory(local_sentence,current_handler_symbol)
+            for local_vff_sentence in collect(local_vff_sentence_array)
+              push!(expanded_sentence_vector,local_vff_sentence)
+            end
+
+        elseif (current_handler_symbol == :translation_handler && contains(local_sentence,"#pragma") == false)
+
+            local_vff_sentence_array = vff_translation_sentence_factory(local_sentence,current_handler_symbol)
+            for local_vff_sentence in collect(local_vff_sentence_array)
+              push!(expanded_sentence_vector,local_vff_sentence)
+            end
+
+        elseif (current_handler_symbol == :degradation_handler && contains(local_sentence,"#pragma") == false)
+
+            local_vff_sentence_array = vff_degradation_sentence_factory(local_sentence,current_handler_symbol)
+            for local_vff_sentence in collect(local_vff_sentence_array)
+              push!(expanded_sentence_vector,local_vff_sentence)
+            end
+
+        elseif (current_handler_symbol == :infrastructure_handler && contains(local_sentence,"#pragma") == false)
+
+            local_vff_sentence_array = vff_infrastructure_sentence_factory(local_sentence,current_handler_symbol)
+            for local_vff_sentence in collect(local_vff_sentence_array)
+              push!(expanded_sentence_vector,local_vff_sentence)
+            end
         end
-      end
     end
 
   catch err
@@ -99,25 +126,50 @@ function parse_vff_metabolic_statements(path_to_model_file::AbstractString)
   return expanded_sentence_vector
 end
 
+
 # ========================================================================================= #
 # Helper functions -
 # ========================================================================================= #
 function extract_vff_handler_symbol(sentence::String)
 
-  # Default - reaction handler -
-  handler_symbol = :metabolic_reaction_handler
-
-  # split the sentence -
-  split_array = split(sentence,"::")
-
-  # grab handler -
-  handler_string = split_array[2]
-  if (handler_string == "metabolic_reaction_handler")
+    # Default - reaction handler -
     handler_symbol = :metabolic_reaction_handler
-  end
 
-  return handler_symbol
+    # split the sentence -
+    split_array = split(sentence,"::")
 
+    # grab handler -
+    handler_string = split_array[2]
+    if (handler_string == "metabolism_handler")
+        handler_symbol = :metabolism_handler
+    elseif (handler_string == "transcription_handler")
+        handler_symbol = :transcription_handler
+    elseif (handler_string == "translation_handler")
+        handler_symbol = :translation_handler
+    elseif (handler_string == "degradation_handler")
+        handler_symbol = :degradation_handler
+    elseif (handler_string == "infrastructure_handler")
+        handler_symbol = :infrastructure_handler
+    end
+
+    # return the handler -
+    return handler_symbol
+end
+
+function vff_transcription_sentence_factory(sentence::String,handler_symbol::Symbol)
+    return vff_metabolic_sentence_factory(sentence,handler_symbol)
+end
+
+function vff_translation_sentence_factory(sentence::String,handler_symbol::Symbol)
+    return vff_metabolic_sentence_factory(sentence,handler_symbol)
+end
+
+function vff_degradation_sentence_factory(sentence::String,handler_symbol::Symbol)
+    return vff_metabolic_sentence_factory(sentence,handler_symbol)
+end
+
+function vff_infrastructure_sentence_factory(sentence::String,handler_symbol::Symbol)
+    return vff_metabolic_sentence_factory(sentence,handler_symbol)
 end
 
 function vff_metabolic_sentence_factory(sentence::String,handler_symbol::Symbol)
@@ -132,18 +184,13 @@ function vff_metabolic_sentence_factory(sentence::String,handler_symbol::Symbol)
 
   # split the sentence -
   split_array = split(sentence,",")
-
-  # sentence_name::AbstractString
-  # sentence_reactant_clause::AbstractString
-  # sentence_product_clause::AbstractString
-  # sentence_reverse_bound::Float64
-  # sentence_forward_bound::Float64
-  # sentence_delimiter::Char
   vff_sentence.sentence_name = split_array[1]
-  vff_sentence.sentence_reactant_clause = split_array[2]
-  vff_sentence.sentence_product_clause = split_array[3]
-  vff_sentence.sentence_reverse_bound = parse(Float64,split_array[4])
-  vff_sentence.sentence_forward_bound = parse(Float64,split_array[5])
+  vff_sentence.sentence_type_flag = parse(Int,convert(String,split_array[2]))
+  vff_sentence.catalyst_lexeme = convert(String,split_array[3])
+  vff_sentence.sentence_reactant_clause = split_array[4]
+  vff_sentence.sentence_product_clause = split_array[5]
+  vff_sentence.sentence_reverse_bound = parse(Float64,split_array[6])
+  vff_sentence.sentence_forward_bound = parse(Float64,split_array[7])
   vff_sentence.sentence_handler = handler_symbol
   vff_sentence.sentence_delimiter = ','
 

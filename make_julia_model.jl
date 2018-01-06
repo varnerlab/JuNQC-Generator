@@ -84,7 +84,6 @@ function main()
   transfer_distribution_file("./distribution","README_INCLUDE.md",path_to_output_file,"README.md")
   transfer_distribution_file("./distribution","Atom.csv",path_to_output_file,"Atom.txt")
 
-
 end
 
 main()

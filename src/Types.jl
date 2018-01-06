@@ -11,6 +11,9 @@ type VFFSentence
   sentence_delimiter::Char
   sentence_handler::Symbol
 
+  # holds the symbol for the catalyst -
+  catalyst_lexeme::String
+
   function VFFSentence()
     this = new()
   end
@@ -53,6 +56,9 @@ type ReactionObject
   reaction_name::AbstractString
   list_of_reactants::Array{SpeciesObject}
   list_of_products::Array{SpeciesObject}
+
+  # holds the type flag -
+  reaction_type_flag::Int
 
   function ReactionObject()
     this = new()

@@ -13,6 +13,8 @@ txtl_parameter_dictionary["saturation_constant_transcription"] = saturation_tran
 txtl_parameter_dictionary["saturation_constant_translation"] = saturation_translation
 txtl_parameter_dictionary["average_transcript_length"] = average_transcript_length
 txtl_parameter_dictionary["average_protein_length"] = average_protein_length
+txtl_parameter_dictionary["kcat_transcription_initiation"] = kcat_transcription_initiation
+txtl_parameter_dictionary["kcat_translation_initiation"] = kcat_translation_initiation
 
 # txtl_parameter_dictionary["gene_coding_length_array"] = gene_coding_length_array
 # txtl_parameter_dictionary["mRNA_coding_length_array"] = mRNA_coding_length_array

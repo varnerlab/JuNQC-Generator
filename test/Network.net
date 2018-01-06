@@ -1,0 +1,90 @@
+// reaction type flags
+// 0 = metabolic reaction
+// 1 = transcription initiation
+// 2 = transcription elongation
+// 3 = translation initiation
+// 4 = translation elongation
+// 5 = enzyme degradation
+// 6 = mRNA degradation
+// 7 = infrastructure
+// 8 = cell growth
+
+// ------------------------------------------------ //
+#pragma::metabolism_handler
+
+// metabolism -
+R1_E1,0,E1,A,B,0,inf
+R2_E2,0,E2,B,C,0,inf
+
+// exchange -
+Ex1_E3,0,E3,A_e,A,0,inf
+Ex2_E4,0,E4,C_e,C,0,inf
+Ex2_E4_r,0,E4,C,C_e,0,inf
+// ------------------------------------------------ //
+
+// ------------------------------------------------ //
+#pragma::transcription_handler
+
+// Transcription -
+// E1 (catalyzes R1)
+T1_open,1,RNAP,G1+RNAP,G1_RNAP,0,inf
+T1,2,[],G1_RNAP,G1+RNAP+mRNA_E1,0,inf
+
+// E2 (catalyzes R2)
+T2_open,1,RNAP,G2+RNAP,G2_RNAP,0,inf
+T2,2,[],G2_RNAP,G2+RNAP+mRNA_E2,0,inf
+
+// E3 (catalyzes Ex1)
+T3_open,1,RNAP,G3+RNAP,G3_RNAP,0,inf
+T3,2,[],G3_RNAP,G3+RNAP+mRNA_E3,0,inf
+
+// E4 (catalyzes Ex2)
+T4_open,1,RNAP,G4+RNAP,G4_RNAP,0,inf
+T4,2,[],G4_RNAP,G4+RNAP+mRNA_E4,0,inf
+// ------------------------------------------------ //
+
+// ------------------------------------------------ //
+#pragma::translation_handler
+
+// Translation -
+X1_open,3,RIBOSOME,mRNA_E1+RIBOSOME,mRNA_E1_RIBOSOME,0,inf
+X1,4,[],mRNA_E1_RIBOSOME,E1+mRNA_E1+RIBOSOME,0,inf
+
+X2_open,3,RIBOSOME,mRNA_E2+RIBOSOME,mRNA_E2_RIBOSOME,0,inf
+X2,4,[],mRNA_E2_RIBOSOME,E2+mRNA_E2+RIBOSOME,0,inf
+
+X3_open,3,RIBOSOME,mRNA_E3+RIBOSOME,mRNA_E3_RIBOSOME,0,inf
+X3,4,[],mRNA_E3_RIBOSOME,E3+mRNA_E3+RIBOSOME,0,inf
+
+X4_open,3,RIBOSOME,mRNA_E4+RIBOSOME,mRNA_E4_RIBOSOME,0,inf
+X4,4,[],mRNA_E4_RIBOSOME,E4+mRNA_E4+RIBOSOME,0,inf
+// ------------------------------------------------ //
+
+// ------------------------------------------------ //
+#pragma::degradation_handler
+
+// E degradation -
+E1_degradation,5,[],E1,[],0,inf
+E2_degradation,5,[],E2,[],0,inf
+E3_degradation,5,[],E3,[],0,inf
+E4_degradation,5,[],E4,[],0,inf
+
+// mRNA degradation -
+mRNA_E1_degradation,6,[],mRNA_E1,[],0,inf
+mRNA_E2_degradation,6,[],mRNA_E2,[],0,inf
+mRNA_E3_degradation,6,[],mRNA_E3,[],0,inf
+mRNA_E4_degradation,6,[],mRNA_E4,[],0,inf
+// ------------------------------------------------ //
+
+// ------------------------------------------------ //
+#pragma::infrastructure_handler
+
+// infrastructure -
+RIBOSOME_SYNTHESIS_DEGRADATION,7,[],RIBOSOME,[],-inf,inf
+RNAP_SYNTHESIS_DEGRADATION,7,[],RNAP,[],-inf,inf
+G1_SYNTHESIS,7,[],[],G1,0,inf
+G2_SYNTHESIS,7,[],[],G2,0,inf
+G3_SYNTHESIS,7,[],[],G3,0,inf
+G4_SYNTHESIS,7,[],[],G4,0,inf
+CELLGROWTH,8,[],X_e,[],-inf,inf
+// ------------------------------------------------ //

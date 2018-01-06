@@ -233,6 +233,11 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
   debug_message = "DataDictionary - finished building the species bounds array ..."
   println(debug_message)
 
+  # set min/max flag -
+  buffer *= "\n"
+  buffer *= "\t# Min/Max flag - default is minimum - \n"
+  buffer *= "\tis_minimum_flag = true\n"
+
   buffer *= "\n"
   buffer *= "\t# Setup the objective coefficient array - \n"
   buffer *= "\tobjective_coefficient_array = [\n";
@@ -262,10 +267,6 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
   debug_message = "DataDictionary - finished building the reactions bounds array ..."
   println(debug_message)
 
-  # set min/max flag -
-  buffer *= "\n"
-  buffer *= "\t# Min/Max flag - default is minimum - \n"
-  buffer *= "\tis_minimum_flag = true\n"
 
   # write the reaction string list -
   counter = 1
@@ -313,6 +314,39 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
   buffer *= "\t];\n"
   buffer *= "\n"
 
+  # setup default kinetic constant array -
+  default_kcat_value = problem_object.configuration_dictionary["default_parameter_dictionary"]["default_enzyme_kcat"]
+  buffer *= "\n"
+  buffer *= "\t# Metabolic kcat array (units:hr^-1) - \n"
+  buffer *="\tmetabolic_rate_constant_array = [\n"
+  reaction_counter = 1
+  for reaction_object in list_of_reactions
+
+      # comment string -
+      reaction_comment_string = build_reaction_comment_string(reaction_object)
+      reaction_type_flag = reaction_object.reaction_type_flag
+
+      # check - is this a metabolic reaction?
+      if (reaction_type_flag == 0)
+
+          # encode -
+          buffer *= "\t\t$(default_kcat_value)\t# $(reaction_counter)\t$(reaction_comment_string)\n"
+      end
+
+      # update the counter -
+      reaction_counter = reaction_counter + 1
+  end
+  buffer *="\t];\n"
+
+
+  # setup saturation constant array -
+  default_KSAT_value = problem_object.configuration_dictionary["default_parameter_dictionary"]["default_saturation_constant"]
+  buffer *= "\n"
+  buffer *= "\t# Metabolic saturation constant array (units mM) - \n"
+  buffer *= "\tnumber_of_metabolic_rates = length(metabolic_rate_constant_array)\n"
+  buffer *= "\tmetabolic_saturation_constant_array = $(default_KSAT_value)*ones(number_of_metabolic_rates*number_of_species)\n"
+  buffer *= "\n"
+
   if host_flag == :bacteria
     buffer *= @include_function("txtl_constants_ecoli","\t")
   else
@@ -339,6 +373,8 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
   buffer *= "\tdata_dictionary[\"is_minimum_flag\"] = is_minimum_flag\n"
   buffer *= "\tdata_dictionary[\"number_of_species\"] = number_of_species\n"
   buffer *= "\tdata_dictionary[\"number_of_reactions\"] = number_of_reactions\n"
+  buffer *= "\tdata_dictionary[\"metabolic_saturation_constant_array\"] = metabolic_saturation_constant_array\n"
+  buffer *= "\tdata_dictionary[\"metabolic_rate_constant_array\"] = metabolic_rate_constant_array\n"
   buffer *= "\tdata_dictionary[\"txtl_parameter_dictionary\"] = txtl_parameter_dictionary\n"
   buffer *= "\t# =============================== DO NOT EDIT ABOVE THIS LINE ============================== #\n"
   buffer *= "\treturn data_dictionary\n"
