@@ -6,6 +6,7 @@ number_of_rnapII = 4600            	            # copies/cells
 number_of_ribosome = 50000         	            # copies/cells
 mRNA_half_life_TF = 0.083                       # hrs
 protein_half_life = 70                          # hrs
+infrastructure_half_life = 300					# hrs
 doubling_time_cell = 0.33                       # hrs
 max_translation_rate = 16.5                     # aa/sec
 max_transcription_rate = 60.0                   # nt/sec
@@ -31,6 +32,7 @@ ribosome_concentration = number_of_ribosome*(1/av_number)*(1/V)*1e9             
 # degrdation rate constants -
 degradation_constant_mRNA = -(1/mRNA_half_life_TF)*log(e,0.5)                           # hr^-1
 degradation_constant_protein = -(1/protein_half_life)*log(e,0.5)                        # hr^-1
+degrdation_constant_infrastructure = -(1/infrastructure_half_life)*log(e,0.5)			# hr^-1
 
 # kcats for transcription and translation -
 kcat_transcription = max_transcription_rate*(3600/average_transcript_length)            # hr^-1

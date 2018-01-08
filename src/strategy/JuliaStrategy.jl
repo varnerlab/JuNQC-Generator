@@ -174,30 +174,6 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
   buffer *= default_bounds_array
   buffer *= "\n"
 
-  # generate initial condition array -
-  buffer *= "\n"
-  buffer *= "\t# Setup species abundance array - \n"
-  buffer *= "\tspecies_abundance_array = [\n";
-  list_of_species::Array{SpeciesObject} = problem_object.list_of_species
-  number_of_species = length(list_of_species)
-  counter = 1
-  for species_object in list_of_species
-
-      # Get the bound type, and species -
-      species_bound_type = species_object.species_bound_type
-      species_symbol = species_object.species_symbol
-
-      debug_message = "Processing $(species_symbol) index $(counter) of $(number_of_species)"
-      println(debug_message)
-
-      # update buffer -
-      buffer *= "\t\t0.0\t;\t#"
-      buffer *= " $(counter) $(species_symbol)\n"
-      counter = counter+1
-  end
-
-  buffer *= "\t];\n"
-
   # generate species bounds constraints -
   buffer *= "\n"
   buffer *= "\t# Setup default species bounds array - \n"
@@ -283,7 +259,7 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
 
     # Build comment string -
     comment_string = build_reaction_comment_string(reaction_object)
-    buffer *= "\t\t\"$(reaction_string)::$(comment_string)\"\n"
+    buffer *= "\t\t\"$(reaction_string)::$(comment_string)\"\t;\t\n"
 
     # update the counter -
     counter = counter + 1;
@@ -304,7 +280,7 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
     # Get the bound type, and species -
     species_bound_type = species_object.species_bound_type
     species_symbol = species_object.species_symbol
-    buffer *= "\t\t\"$(species_symbol)\"\n"
+    buffer *= "\t\t\"$(species_symbol)\"\t;\t\n"
 
     # debug -
     debug_message = "Processing species symbol $(species_symbol) (index $(counter) of $(number_of_species))"
@@ -358,6 +334,30 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
   buffer *= "\n"
   buffer *= @include_function("txtl_parameter_dictionary","\t")
   buffer *= "\n"
+
+  # generate initial condition array -
+  buffer *= "\n"
+  buffer *= "\t# Setup species abundance array - \n"
+  buffer *= "\tspecies_abundance_array = [\n";
+  list_of_species::Array{SpeciesObject} = problem_object.list_of_species
+  number_of_species = length(list_of_species)
+  counter = 1
+  for species_object in list_of_species
+
+      # Get the bound type, and species -
+      species_bound_type = species_object.species_bound_type
+      species_symbol = species_object.species_symbol
+
+      debug_message = "Processing $(species_symbol) index $(counter) of $(number_of_species)"
+      println(debug_message)
+
+      # update buffer -
+      buffer *= "\t\t0.0\t;\t#"
+      buffer *= " $(counter) $(species_symbol)\n"
+      counter = counter+1
+  end
+
+  buffer *= "\t];\n"
 
   # return block -
   buffer *= "\n"
