@@ -205,7 +205,7 @@ function vff_metabolic_sentence_factory(sentence::String,handler_symbol::Symbol)
     vff_sentence.sentence_reverse_bound = 0.0
 
     # create a new copy of sentence -
-    vff_sentence_copy = copy(vff_sentence)
+    vff_sentence_copy = deepcopy(vff_sentence)
     vff_sentence_copy.sentence_name = (vff_sentence_copy.sentence_name)*"_reverse"
     vff_sentence_copy.sentence_reactant_clause = vff_sentence.sentence_product_clause
     vff_sentence_copy.sentence_product_clause = vff_sentence.sentence_reactant_clause

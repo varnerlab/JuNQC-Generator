@@ -170,6 +170,7 @@ function build_reaction_list(statement_vector::Array{VFFSentence},configuration_
     product_string = vff_sentence.sentence_product_clause
     enyzme_generation_flag = vff_sentence.sentence_type_flag
     reaction_type_flag = vff_sentence.sentence_type_flag
+    catalyst_lexeme = vff_sentence.catalyst_lexeme
 
 
     # recatants -
@@ -187,6 +188,8 @@ function build_reaction_list(statement_vector::Array{VFFSentence},configuration_
     reaction_object.list_of_products = list_of_products
     reaction_object.reaction_name = vff_sentence.sentence_name
     reaction_object.reaction_type_flag = reaction_type_flag
+    reaction_object.catalyst_lexeme = catalyst_lexeme
+
 
     # store -
     push!(reaction_array,reaction_object)

@@ -14,6 +14,7 @@ average_protein_length = 5000       # aa
 fraction_nucleus = 0.49             # dimensionless
 av_number = 6.02e23                 # number/mol
 avg_gene_number = 2                 # number of copies of a gene
+polysome_number = 4					# number of ribsomoses per transcript
 # ------------------------------------------------------------------------------------------#
 #
 # ------------------------------------------------------------------------------------------#
@@ -23,25 +24,30 @@ avg_gene_number = 2                 # number of copies of a gene
 V = ((1-fraction_nucleus)*(1/6)*(3.14159)*(cell_diameter)^3)*(1e-15)
 
 # Calculate the rnapII_concentration and ribosome_concentration
-rnapII_concentration = number_of_rnapII*(1/av_number)*(1/V)*1e9                   # nM
-ribosome_concentration = number_of_ribosome*(1/av_number)*(1/V)*1e9               # nM
+rnapII_concentration = number_of_rnapII*(1/av_number)*(1/V)*1e9                         # nM
+ribosome_concentration = number_of_ribosome*(1/av_number)*(1/V)*1e9                     # nM
 
 # degrdation rate constants -
-degradation_constant_mRNA = -(1/mRNA_half_life_TF)*log(e,0.5)                       # hr^-1
-degradation_constant_protein = -(1/protein_half_life)*log(e,0.5)                    # hr^-1
+degradation_constant_mRNA = -(1/mRNA_half_life_TF)*log(e,0.5)                           # hr^-1
+degradation_constant_protein = -(1/protein_half_life)*log(e,0.5)                        # hr^-1
+degrdation_constant_infrastructure = -(1/infrastructure_half_life)*log(e,0.5)			# hr^-1
 
 # kcats for transcription and translation -
-kcat_transcription = max_transcription_rate*(3600/average_transcript_length)      # hr^-1
-kcat_translation = max_translation_rate*(3600/average_protein_length)             # hr^-1
+kcat_transcription = max_transcription_rate*(3600/average_transcript_length)            # hr^-1
+kcat_translation = polysome_number*max_translation_rate*(3600/average_protein_length)   # hr^-1
+
+# kcat for transcription initiation -
+kcat_transcription_initiation = ((1/3600)*transcription_initiation_time_contstant)^-1   # hr^-1
+kcat_translation_initiation = 100*kcat_transcription_initiation                          # hr^-1
 
 # Maximum specific growth rate -
-maximum_specific_growth_rate = (1/doubling_time_cell)*log(e,2)                      # hr^-1
+maximum_specific_growth_rate = (1/doubling_time_cell)*log(e,2)                          # hr^-1
 
 # What is the average gene concentration -
-avg_gene_concentration = avg_gene_number*(1/av_number)*(1/V)*1e9                  # nM
+avg_gene_concentration = avg_gene_number*(1/av_number)*(1/V)*1e9                        # nM
 
 # How fast do my cells die?
-death_rate_constant = 0.2*maximum_specific_growth_rate                            # hr^-1
+death_rate_constant = 0.2*maximum_specific_growth_rate                                  # hr^-1
 
 # Saturation constants for translation and trascription -
 saturation_transcription = 4600*(1/av_number)*(1/V)*1e9                           # nM

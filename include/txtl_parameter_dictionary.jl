@@ -1,5 +1,5 @@
 # Alias the txtl parameters -
-txtl_parameter_dictionary = Dict{AbstractString,Float64}()
+txtl_parameter_dictionary = Dict{AbstractString,Any}()
 txtl_parameter_dictionary["rnapII_concentration"] = rnapII_concentration  # muM
 txtl_parameter_dictionary["ribosome_concentration"] = ribosome_concentration # muM
 txtl_parameter_dictionary["degradation_constant_mRNA"] = degradation_constant_mRNA  # hr^-1

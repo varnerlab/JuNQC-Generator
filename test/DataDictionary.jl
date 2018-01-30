@@ -25,7 +25,7 @@
 # ----------------------------------------------------------------------------------- #
 # Function: DataDictionary
 # Description: Holds simulation and model parameters as key => value pairs in a Julia Dict()
-# Generated on: 2018-01-06T13:57:00.029
+# Generated on: 2018-01-14T17:35:16.54
 #
 # Input arguments:
 # time_start::Float64 => Simulation start time value (scalar)
@@ -86,38 +86,6 @@ function DataDictionary(time_start,time_stop,time_step)
 		0	187.20000000000002	;	# 39 [] --> X_e
 	];
 
-
-	# Setup species abundance array -
-	species_abundance_array = [
-		0.0	;	# 1 A
-		0.0	;	# 2 B
-		0.0	;	# 3 C
-		0.0	;	# 4 E1
-		0.0	;	# 5 E2
-		0.0	;	# 6 E3
-		0.0	;	# 7 E4
-		0.0	;	# 8 G1
-		0.0	;	# 9 G1_RNAP
-		0.0	;	# 10 G2
-		0.0	;	# 11 G2_RNAP
-		0.0	;	# 12 G3
-		0.0	;	# 13 G3_RNAP
-		0.0	;	# 14 G4
-		0.0	;	# 15 G4_RNAP
-		0.0	;	# 16 RIBOSOME
-		0.0	;	# 17 RNAP
-		0.0	;	# 18 mRNA_E1
-		0.0	;	# 19 mRNA_E1_RIBOSOME
-		0.0	;	# 20 mRNA_E2
-		0.0	;	# 21 mRNA_E2_RIBOSOME
-		0.0	;	# 22 mRNA_E3
-		0.0	;	# 23 mRNA_E3_RIBOSOME
-		0.0	;	# 24 mRNA_E4
-		0.0	;	# 25 mRNA_E4_RIBOSOME
-		0.0	;	# 26 A_e
-		0.0	;	# 27 C_e
-		0.0	;	# 28 X_e
-	];
 
 	# Setup default species bounds array -
 	species_bounds_array = [
@@ -199,87 +167,87 @@ function DataDictionary(time_start,time_stop,time_step)
 
 	# List of reation strings - used to write flux report
 	list_of_reaction_strings = [
-		"R1_E1::A --> B"
-		"R2_E2::B --> C"
-		"Ex1_E3::A_e --> A"
-		"Ex2_E4::C_e --> C"
-		"Ex2_E4_r::C --> C_e"
-		"T1_open::G1+RNAP --> G1_RNAP"
-		"T1::G1_RNAP --> G1+RNAP+mRNA_E1"
-		"T2_open::G2+RNAP --> G2_RNAP"
-		"T2::G2_RNAP --> G2+RNAP+mRNA_E2"
-		"T3_open::G3+RNAP --> G3_RNAP"
-		"T3::G3_RNAP --> G3+RNAP+mRNA_E3"
-		"T4_open::G4+RNAP --> G4_RNAP"
-		"T4::G4_RNAP --> G4+RNAP+mRNA_E4"
-		"X1_open::mRNA_E1+RIBOSOME --> mRNA_E1_RIBOSOME"
-		"X1::mRNA_E1_RIBOSOME --> E1+mRNA_E1+RIBOSOME"
-		"X2_open::mRNA_E2+RIBOSOME --> mRNA_E2_RIBOSOME"
-		"X2::mRNA_E2_RIBOSOME --> E2+mRNA_E2+RIBOSOME"
-		"X3_open::mRNA_E3+RIBOSOME --> mRNA_E3_RIBOSOME"
-		"X3::mRNA_E3_RIBOSOME --> E3+mRNA_E3+RIBOSOME"
-		"X4_open::mRNA_E4+RIBOSOME --> mRNA_E4_RIBOSOME"
-		"X4::mRNA_E4_RIBOSOME --> E4+mRNA_E4+RIBOSOME"
-		"E1_degradation::E1 --> []"
-		"E2_degradation::E2 --> []"
-		"E3_degradation::E3 --> []"
-		"E4_degradation::E4 --> []"
-		"mRNA_E1_degradation::mRNA_E1 --> []"
-		"mRNA_E2_degradation::mRNA_E2 --> []"
-		"mRNA_E3_degradation::mRNA_E3 --> []"
-		"mRNA_E4_degradation::mRNA_E4 --> []"
-		"RIBOSOME_SYNTHESIS_DEGRADATION::RIBOSOME --> []"
-		"RIBOSOME_SYNTHESIS_DEGRADATION_reverse::[] --> RIBOSOME"
-		"RNAP_SYNTHESIS_DEGRADATION::RNAP --> []"
-		"RNAP_SYNTHESIS_DEGRADATION_reverse::[] --> RNAP"
-		"G1_SYNTHESIS::[] --> G1"
-		"G2_SYNTHESIS::[] --> G2"
-		"G3_SYNTHESIS::[] --> G3"
-		"G4_SYNTHESIS::[] --> G4"
-		"CELLGROWTH::X_e --> []"
-		"CELLGROWTH_reverse::[] --> X_e"
+		"R1_E1::A --> B"	;	# 1
+		"R2_E2::B --> C"	;	# 2
+		"Ex1_E3::A_e --> A"	;	# 3
+		"Ex2_E4::C_e --> C"	;	# 4
+		"Ex2_E4_r::C --> C_e"	;	# 5
+		"T1_open::G1+RNAP --> G1_RNAP"	;	# 6
+		"T1::G1_RNAP --> G1+RNAP+mRNA_E1"	;	# 7
+		"T2_open::G2+RNAP --> G2_RNAP"	;	# 8
+		"T2::G2_RNAP --> G2+RNAP+mRNA_E2"	;	# 9
+		"T3_open::G3+RNAP --> G3_RNAP"	;	# 10
+		"T3::G3_RNAP --> G3+RNAP+mRNA_E3"	;	# 11
+		"T4_open::G4+RNAP --> G4_RNAP"	;	# 12
+		"T4::G4_RNAP --> G4+RNAP+mRNA_E4"	;	# 13
+		"X1_open::mRNA_E1+RIBOSOME --> mRNA_E1_RIBOSOME"	;	# 14
+		"X1::mRNA_E1_RIBOSOME --> E1+mRNA_E1+RIBOSOME"	;	# 15
+		"X2_open::mRNA_E2+RIBOSOME --> mRNA_E2_RIBOSOME"	;	# 16
+		"X2::mRNA_E2_RIBOSOME --> E2+mRNA_E2+RIBOSOME"	;	# 17
+		"X3_open::mRNA_E3+RIBOSOME --> mRNA_E3_RIBOSOME"	;	# 18
+		"X3::mRNA_E3_RIBOSOME --> E3+mRNA_E3+RIBOSOME"	;	# 19
+		"X4_open::mRNA_E4+RIBOSOME --> mRNA_E4_RIBOSOME"	;	# 20
+		"X4::mRNA_E4_RIBOSOME --> E4+mRNA_E4+RIBOSOME"	;	# 21
+		"E1_degradation::E1 --> []"	;	# 22
+		"E2_degradation::E2 --> []"	;	# 23
+		"E3_degradation::E3 --> []"	;	# 24
+		"E4_degradation::E4 --> []"	;	# 25
+		"mRNA_E1_degradation::mRNA_E1 --> []"	;	# 26
+		"mRNA_E2_degradation::mRNA_E2 --> []"	;	# 27
+		"mRNA_E3_degradation::mRNA_E3 --> []"	;	# 28
+		"mRNA_E4_degradation::mRNA_E4 --> []"	;	# 29
+		"RIBOSOME_SYNTHESIS_DEGRADATION::RIBOSOME --> []"	;	# 30
+		"RIBOSOME_SYNTHESIS_DEGRADATION_reverse::[] --> RIBOSOME"	;	# 31
+		"RNAP_SYNTHESIS_DEGRADATION::RNAP --> []"	;	# 32
+		"RNAP_SYNTHESIS_DEGRADATION_reverse::[] --> RNAP"	;	# 33
+		"G1_SYNTHESIS::[] --> G1"	;	# 34
+		"G2_SYNTHESIS::[] --> G2"	;	# 35
+		"G3_SYNTHESIS::[] --> G3"	;	# 36
+		"G4_SYNTHESIS::[] --> G4"	;	# 37
+		"CELLGROWTH::X_e --> []"	;	# 38
+		"CELLGROWTH_reverse::[] --> X_e"	;	# 39
 	];
 
 	# List of metabolite strings - used to write flux report
 	list_of_metabolite_symbols = [
-		"A"
-		"B"
-		"C"
-		"E1"
-		"E2"
-		"E3"
-		"E4"
-		"G1"
-		"G1_RNAP"
-		"G2"
-		"G2_RNAP"
-		"G3"
-		"G3_RNAP"
-		"G4"
-		"G4_RNAP"
-		"RIBOSOME"
-		"RNAP"
-		"mRNA_E1"
-		"mRNA_E1_RIBOSOME"
-		"mRNA_E2"
-		"mRNA_E2_RIBOSOME"
-		"mRNA_E3"
-		"mRNA_E3_RIBOSOME"
-		"mRNA_E4"
-		"mRNA_E4_RIBOSOME"
-		"A_e"
-		"C_e"
-		"X_e"
+		"A"	;	# 1
+		"B"	;	# 2
+		"C"	;	# 3
+		"E1"	;	# 4
+		"E2"	;	# 5
+		"E3"	;	# 6
+		"E4"	;	# 7
+		"G1"	;	# 8
+		"G1_RNAP"	;	# 9
+		"G2"	;	# 10
+		"G2_RNAP"	;	# 11
+		"G3"	;	# 12
+		"G3_RNAP"	;	# 13
+		"G4"	;	# 14
+		"G4_RNAP"	;	# 15
+		"RIBOSOME"	;	# 16
+		"RNAP"	;	# 17
+		"mRNA_E1"	;	# 18
+		"mRNA_E1_RIBOSOME"	;	# 19
+		"mRNA_E2"	;	# 20
+		"mRNA_E2_RIBOSOME"	;	# 21
+		"mRNA_E3"	;	# 22
+		"mRNA_E3_RIBOSOME"	;	# 23
+		"mRNA_E4"	;	# 24
+		"mRNA_E4_RIBOSOME"	;	# 25
+		"A_e"	;	# 26
+		"C_e"	;	# 27
+		"X_e"	;	# 28
 	];
 
 
 	# Metabolic kcat array (units:hr^-1) -
 	metabolic_rate_constant_array = [
-		46800.0	# 1	A --> B
-		46800.0	# 2	B --> C
-		46800.0	# 3	A_e --> A
-		46800.0	# 4	C_e --> C
-		46800.0	# 5	C --> C_e
+		46800.0	;	# 1	A --> B
+		46800.0	;	# 2	B --> C
+		46800.0	;	# 3	A_e --> A
+		46800.0	;	# 4	C_e --> C
+		46800.0	;	# 5	C --> C_e
 	];
 
 	# Metabolic saturation constant array (units mM) -
@@ -294,6 +262,7 @@ function DataDictionary(time_start,time_stop,time_step)
 	number_of_ribosome = 50000         	            # copies/cells
 	mRNA_half_life_TF = 0.083                       # hrs
 	protein_half_life = 70                          # hrs
+	infrastructure_half_life = 300					# hrs
 	doubling_time_cell = 0.33                       # hrs
 	max_translation_rate = 16.5                     # aa/sec
 	max_transcription_rate = 60.0                   # nt/sec
@@ -319,6 +288,7 @@ function DataDictionary(time_start,time_stop,time_step)
 	# degrdation rate constants -
 	degradation_constant_mRNA = -(1/mRNA_half_life_TF)*log(e,0.5)                           # hr^-1
 	degradation_constant_protein = -(1/protein_half_life)*log(e,0.5)                        # hr^-1
+	degrdation_constant_infrastructure = -(1/infrastructure_half_life)*log(e,0.5)			# hr^-1
 
 	# kcats for transcription and translation -
 	kcat_transcription = max_transcription_rate*(3600/average_transcript_length)            # hr^-1
@@ -342,12 +312,14 @@ function DataDictionary(time_start,time_stop,time_step)
 	saturation_translation = 150000*(1/av_number)*(1/V)*1e9                                 # nM
 	# -------------------------------------------------------------------------------------------#
 
+
 	# Alias the txtl parameters -
 	txtl_parameter_dictionary = Dict{AbstractString,Float64}()
 	txtl_parameter_dictionary["rnapII_concentration"] = rnapII_concentration  # muM
 	txtl_parameter_dictionary["ribosome_concentration"] = ribosome_concentration # muM
 	txtl_parameter_dictionary["degradation_constant_mRNA"] = degradation_constant_mRNA  # hr^-1
 	txtl_parameter_dictionary["degradation_constant_protein"] = degradation_constant_protein  # hr^-1
+	txtl_parameter_dictionary["degrdation_constant_infrastructure"] = degrdation_constant_infrastructure  # hr^-1
 	txtl_parameter_dictionary["kcat_transcription"] = kcat_transcription  # hr^-1
 	txtl_parameter_dictionary["kcat_translation"] = kcat_translation  # hr^-1
 	txtl_parameter_dictionary["maximum_specific_growth_rate"] = maximum_specific_growth_rate  # hr^-1
@@ -364,6 +336,38 @@ function DataDictionary(time_start,time_stop,time_step)
 	# txtl_parameter_dictionary["mRNA_coding_length_array"] = mRNA_coding_length_array
 	# txtl_parameter_dictionary["protein_coding_length_array"] = protein_coding_length_array
 
+
+	# Setup species abundance array -
+	species_abundance_array = [
+		0.0	;	# 1 A
+		0.0	;	# 2 B
+		0.0	;	# 3 C
+		0.0	;	# 4 E1
+		0.0	;	# 5 E2
+		0.0	;	# 6 E3
+		0.0	;	# 7 E4
+		0.0	;	# 8 G1
+		0.0	;	# 9 G1_RNAP
+		0.0	;	# 10 G2
+		0.0	;	# 11 G2_RNAP
+		0.0	;	# 12 G3
+		0.0	;	# 13 G3_RNAP
+		0.0	;	# 14 G4
+		0.0	;	# 15 G4_RNAP
+		0.0	;	# 16 RIBOSOME
+		0.0	;	# 17 RNAP
+		0.0	;	# 18 mRNA_E1
+		0.0	;	# 19 mRNA_E1_RIBOSOME
+		0.0	;	# 20 mRNA_E2
+		0.0	;	# 21 mRNA_E2_RIBOSOME
+		0.0	;	# 22 mRNA_E3
+		0.0	;	# 23 mRNA_E3_RIBOSOME
+		0.0	;	# 24 mRNA_E4
+		0.0	;	# 25 mRNA_E4_RIBOSOME
+		0.0	;	# 26 A_e
+		0.0	;	# 27 C_e
+		0.0	;	# 28 X_e
+	];
 
 	# =============================== DO NOT EDIT BELOW THIS LINE ============================== #
 	data_dictionary = Dict{AbstractString,Any}()

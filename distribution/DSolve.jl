@@ -40,6 +40,11 @@ function time_stepping_routine(time,time_step_size,state_array,data_dictionary)
     return user_time_stepping_routine(time,time_step_size,state_array,data_dictionary)
 end
 
+# update the data dictionary -
+function update_model_data_dictionary(time_start,time_stop,time_step_size,data_dictionary)
+    return user_update_data_dictionary(time_start,time_stop,time_step_size,data_dictionary)
+end
+
 # main execution method -
 function main(time_start::Float64,time_stop::Float64,time_step_size::Float64,data_dictionary::Dict{AbstractString,Any})
 
@@ -118,6 +123,9 @@ time_step_size = 0.1    # hr
 
 # load the data dictionary -
 data_dictionary = DataDictionary(time_start,time_stop,time_step_size)
+
+# update the data dictionary w/model specific data -
+data_dictionary = update_model_data_dictionary(time_start,time_stop,time_step_size,data_dictionary)
 
 # call main -
 (time_archive,state_archive,flux_archive) = main(time_start,time_stop,time_step_size,data_dictionary)

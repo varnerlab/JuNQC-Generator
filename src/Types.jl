@@ -59,6 +59,7 @@ type ReactionObject
 
   # holds the type flag -
   reaction_type_flag::Int
+  catalyst_lexeme::String
 
   function ReactionObject()
     this = new()

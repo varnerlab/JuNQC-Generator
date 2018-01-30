@@ -152,6 +152,14 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
   default_rate_constant = parse(Float64,default_parameter_dictionary["default_enzyme_kcat"])
   default_upper_bound = default_rate_constant*enzyme_initial_condition
 
+  # get list of species and reactions -
+  list_of_species::Array{SpeciesObject} = problem_object.list_of_species
+  list_of_reactions::Array{ReactionObject} = problem_object.list_of_reactions
+
+  # what is the size of the system?
+  number_of_species = length(list_of_species)
+  number_of_reactions = length(list_of_reactions)
+
   # initialize the buffer -
   buffer = ""
   buffer *= header_buffer
@@ -220,8 +228,6 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
 
   # What species are calculated? ()
   counter = 1
-  list_of_reactions::Array{ReactionObject} = problem_object.list_of_reactions
-  number_of_reactions = length(list_of_reactions)
   for reaction_object in list_of_reactions
 
     reaction_string = reaction_object.reaction_name
@@ -259,7 +265,7 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
 
     # Build comment string -
     comment_string = build_reaction_comment_string(reaction_object)
-    buffer *= "\t\t\"$(reaction_string)::$(comment_string)\"\t;\t\n"
+    buffer *= "\t\t\"$(reaction_string)::$(comment_string)\"\t;\t# $(counter)\n"
 
     # update the counter -
     counter = counter + 1;
@@ -280,7 +286,7 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
     # Get the bound type, and species -
     species_bound_type = species_object.species_bound_type
     species_symbol = species_object.species_symbol
-    buffer *= "\t\t\"$(species_symbol)\"\t;\t\n"
+    buffer *= "\t\t\"$(species_symbol)\"\t;\t# $(counter)\n"
 
     # debug -
     debug_message = "Processing species symbol $(species_symbol) (index $(counter) of $(number_of_species))"
@@ -293,7 +299,7 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
   # setup default kinetic constant array -
   default_kcat_value = problem_object.configuration_dictionary["default_parameter_dictionary"]["default_enzyme_kcat"]
   buffer *= "\n"
-  buffer *= "\t# Metabolic kcat array (units:hr^-1) - \n"
+  buffer *= "\t# Metabolic kcat/Vmax array (units:hr^-1 or mM/hr) - \n"
   buffer *="\tmetabolic_rate_constant_array = [\n"
   reaction_counter = 1
   for reaction_object in list_of_reactions
@@ -305,8 +311,17 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
       # check - is this a metabolic reaction?
       if (reaction_type_flag == 0)
 
-          # encode -
-          buffer *= "\t\t$(default_kcat_value)\t# $(reaction_counter)\t$(reaction_comment_string)\n"
+          # ok, does this reaction have a catalyst?
+          catalyst_lexeme = reaction_object.catalyst_lexeme
+          if (catalyst_lexeme == "[]")
+
+              # encode -
+              buffer *= "\t\t$(default_upper_bound)\t;\t# Vmax $(reaction_counter)\t$(reaction_comment_string)\n"
+
+          else
+              # encode -
+              buffer *= "\t\t$(default_kcat_value)\t;\t# kcat $(reaction_counter)\t$(reaction_comment_string)\n"
+          end
       end
 
       # update the counter -
@@ -330,6 +345,9 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
   end
   buffer *= "\n"
 
+  # ok, hete we need to add the gene, mRNA and protein arrays -
+
+
   # put the misc dictionary -
   buffer *= "\n"
   buffer *= @include_function("txtl_parameter_dictionary","\t")
@@ -339,8 +357,6 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
   buffer *= "\n"
   buffer *= "\t# Setup species abundance array - \n"
   buffer *= "\tspecies_abundance_array = [\n";
-  list_of_species::Array{SpeciesObject} = problem_object.list_of_species
-  number_of_species = length(list_of_species)
   counter = 1
   for species_object in list_of_species
 
