@@ -4,13 +4,13 @@
 cell_diameter = 12                  # mum
 number_of_rnapII = 75000            # copies/cells
 number_of_ribosome = 1e6            # copies/cells
-mRNA_half_life_TF = 2               # hrs
+mRNA_half_life_TF = 4               # hrs
 protein_half_life = 10              # hrs
 doubling_time_cell = 19.5           # hrs
 max_translation_rate = 5            # aa/sec
-max_transcription_rate = 6.0        # nt/sec
-average_transcript_length = 15000   # nt
-average_protein_length = 5000       # aa
+max_transcription_rate = 60.0       # nt/sec
+average_transcript_length = 44192   # nt
+average_protein_length = 458        # aa
 fraction_nucleus = 0.49             # dimensionless
 av_number = 6.02e23                 # number/mol
 avg_gene_number = 2                 # number of copies of a gene
@@ -50,6 +50,6 @@ avg_gene_concentration = avg_gene_number*(1/av_number)*(1/V)*1e9                
 death_rate_constant = 0.2*maximum_specific_growth_rate                                  # hr^-1
 
 # Saturation constants for translation and trascription -
-saturation_transcription = 4600*(1/av_number)*(1/V)*1e9                           # nM
-saturation_translation = 100000*(1/av_number)*(1/V)*1e9                           # nM
+saturation_transcription = 600*(1/av_number)*(1/V)*1e9                           # nM
+saturation_translation = 95000*(1/av_number)*(1/V)*1e9                           # nM
 # -------------------------------------------------------------------------------------------#
