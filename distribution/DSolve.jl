@@ -67,6 +67,9 @@ function main(time_start::Float64,time_stop::Float64,time_step_size::Float64,dat
     # setup current state -
     current_state = initial_condition_array
 
+    # setup current time -
+    current_time = time_start
+
     # archive the state -
     for col_index = 1:number_of_species
         state_archive[end,col_index] = current_state[col_index]
@@ -79,17 +82,17 @@ function main(time_start::Float64,time_stop::Float64,time_step_size::Float64,dat
     while (is_ok_to_continue)
 
         # update the flux bounds function -
-        flux_bounds_array = update_flux_bounds_array(time,time_step_size,current_state,data_dictionary)
+        flux_bounds_array = update_flux_bounds_array(current_time,time_step_size,current_state,data_dictionary)
 
         # update the species bounds function -
-        species_bounds_array = update_species_bounds_array(time,time_step_size,current_state,data_dictionary)
+        species_bounds_array = update_species_bounds_array(current_time,time_step_size,current_state,data_dictionary)
 
         # update the species and flux bounds arrays -
         data_dictionary["default_flux_bounds_array"] = flux_bounds_array
         data_dictionary["species_bounds_array"] = species_bounds_array
 
         # update the current state -
-        (current_state,flux_array) = time_stepping_routine(time,time_step_size,current_state,data_dictionary)
+        (current_state,flux_array) = time_stepping_routine(current_time,time_step_size,current_state,data_dictionary)
 
         # update time -
         current_time = current_time + time_step_size
