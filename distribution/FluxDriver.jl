@@ -49,6 +49,11 @@ lp_problem = GLPK.Prob();
 GLPK.set_prob_name(lp_problem, "sample");
 GLPK.set_obj_name(lp_problem, "objective")
 
+# Set solver parameters
+solver_parameters = GLPK.SimplexParam();
+solver_parameters.msg_lev = GLPK.MSG_OFF;
+solver_parameters.presolve = GLPK.ON;
+
 # Are we doing min -or- max?
 min_flag = data_dictionary["is_minimum_flag"];
 if min_flag == true
@@ -131,12 +136,6 @@ for species_index in species_index_vector
 	end
 end
 GLPK.load_matrix(lp_problem, number_of_species*number_of_fluxes, row_index_array, col_index_array, flat_stoichiometric_array);
-
-# Set solver parameters
-solver_parameters = GLPK.SimplexParam();
-solver_parameters.msg_lev = GLPK.MSG_ERR;
-solver_parameters.presolve = GLPK.ON;
-GLPK.init_smcp(solver_parameters);
 
 # Call the solver -
 exit_flag = GLPK.simplex(lp_problem, solver_parameters);
