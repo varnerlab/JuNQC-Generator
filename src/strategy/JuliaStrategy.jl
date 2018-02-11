@@ -408,7 +408,7 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
   buffer *= "\tdata_dictionary[\"metabolic_vmax_array\"] = metabolic_vmax_array\n"
   buffer *= "\tdata_dictionary[\"characteristic_enzyme_abundance_mM\"] = $(characteristic_enzyme_abundance_mM)\n"
   buffer *= "\tdata_dictionary[\"volume_of_cell\"] = V\n"
-  buffer *= "\tdata_dictionary[\"mass_of_cell\"] = mass_of_cell\n"
+  buffer *= "\tdata_dictionary[\"mass_of_single_cell\"] = mass_of_single_cell\n"
   buffer *= "\tdata_dictionary[\"txtl_parameter_dictionary\"] = txtl_parameter_dictionary\n"
   buffer *= "\t# =============================== DO NOT EDIT ABOVE THIS LINE ============================== #\n"
   buffer *= "\treturn data_dictionary\n"
