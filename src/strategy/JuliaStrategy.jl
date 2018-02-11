@@ -152,6 +152,13 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
   default_rate_constant = parse(Float64,default_parameter_dictionary["default_enzyme_kcat"])
   default_upper_bound = default_rate_constant*enzyme_initial_condition
 
+  # we also need the initial enzyme level in muM -
+  characteristic_enzyme_abundance_mM = enzyme_initial_condition
+
+  # load the ec number database -
+  enzyme_kinetics_dictionary = problem_object.enzyme_kinetics_dictionary
+  enzyme_kinetics_dictionary = rekey_enzyme_dictionary(enzyme_kinetics_dictionary)
+
   # get list of species and reactions -
   list_of_species::Array{SpeciesObject} = problem_object.list_of_species
   list_of_reactions::Array{ReactionObject} = problem_object.list_of_reactions
@@ -299,28 +306,36 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
   # setup default kinetic constant array -
   default_kcat_value = problem_object.configuration_dictionary["default_parameter_dictionary"]["default_enzyme_kcat"]
   buffer *= "\n"
-  buffer *= "\t# Metabolic kcat/Vmax array (units:hr^-1 or mM/hr) - \n"
-  buffer *="\tmetabolic_rate_constant_array = [\n"
+  buffer *= "\t# Metabolic Vmax array (units: mmol/B-hr) - \n"
+  buffer *="\tmetabolic_vmax_array = [\n"
   reaction_counter = 1
   for reaction_object in list_of_reactions
 
       # comment string -
       reaction_comment_string = build_reaction_comment_string(reaction_object)
       reaction_type_flag = reaction_object.reaction_type_flag
+      catalyst_ec_number = reaction_object.catalyst_ec_number
+
 
       # check - is this a metabolic reaction?
       if (reaction_type_flag == 0)
+          if (catalyst_ec_number != "[]")
 
-          # ok, does this reaction have a catalyst?
-          catalyst_lexeme = reaction_object.catalyst_lexeme
-          if (catalyst_lexeme == "[]")
+              # lookup the for the kcat for this reaction -
+              local_enzyme_dictionary = enzyme_kinetics_dictionary[catalyst_ec_number]
+              kcat_value = local_enzyme_dictionary["kcat_value"]
 
-              # encode -
-              buffer *= "\t\t$(default_upper_bound)\t;\t# Vmax $(reaction_counter)\t$(reaction_comment_string)\n"
+              # need to convert this to hr -
+              kcat_value = (3600)*(parse(Float64,kcat_value))
 
+              # what is the vmax?
+              vmax_value = kcat_value*characteristic_enzyme_abundance_mM
+
+              # write the line -
+               buffer *= "\t\t$(vmax_value)\t;\t# Vmax [mmol/gdw-hr] $(reaction_counter)\t$(reaction_comment_string)\n"
           else
-              # encode -
-              buffer *= "\t\t$(default_kcat_value)\t;\t# kcat $(reaction_counter)\t$(reaction_comment_string)\n"
+              # All reactions are treated as VMax -
+              buffer *= "\t\t$(default_upper_bound)\t;\t# Vmax [mmol/gdw-hr] $(reaction_counter)\t$(reaction_comment_string)\n"
           end
       end
 
@@ -334,7 +349,7 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
   default_KSAT_value = problem_object.configuration_dictionary["default_parameter_dictionary"]["default_saturation_constant"]
   buffer *= "\n"
   buffer *= "\t# Metabolic saturation constant array (units mM) - \n"
-  buffer *= "\tnumber_of_metabolic_rates = length(metabolic_rate_constant_array)\n"
+  buffer *= "\tnumber_of_metabolic_rates = length(metabolic_vmax_array)\n"
   buffer *= "\tmetabolic_saturation_constant_array = $(default_KSAT_value)*ones(number_of_metabolic_rates*number_of_species)\n"
   buffer *= "\n"
 
@@ -390,7 +405,10 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
   buffer *= "\tdata_dictionary[\"number_of_species\"] = number_of_species\n"
   buffer *= "\tdata_dictionary[\"number_of_reactions\"] = number_of_reactions\n"
   buffer *= "\tdata_dictionary[\"metabolic_saturation_constant_array\"] = metabolic_saturation_constant_array\n"
-  buffer *= "\tdata_dictionary[\"metabolic_rate_constant_array\"] = metabolic_rate_constant_array\n"
+  buffer *= "\tdata_dictionary[\"metabolic_vmax_array\"] = metabolic_vmax_array\n"
+  buffer *= "\tdata_dictionary[\"characteristic_enzyme_abundance_mM\"] = $(characteristic_enzyme_abundance_mM)\n"
+  buffer *= "\tdata_dictionary[\"volume_of_cell\"] = V\n"
+  buffer *= "\tdata_dictionary[\"mass_of_cell\"] = mass_of_cell\n"
   buffer *= "\tdata_dictionary[\"txtl_parameter_dictionary\"] = txtl_parameter_dictionary\n"
   buffer *= "\t# =============================== DO NOT EDIT ABOVE THIS LINE ============================== #\n"
   buffer *= "\treturn data_dictionary\n"
@@ -418,6 +436,10 @@ function build_default_flux_bounds(problem_object::ProblemObject)
   default_rate_constant = parse(Float64,default_parameter_dictionary["default_enzyme_kcat"])
   default_upper_bound = default_rate_constant*enzyme_initial_condition
 
+  # load the ec number database -
+  enzyme_kinetics_dictionary = problem_object.enzyme_kinetics_dictionary
+  enzyme_kinetics_dictionary = rekey_enzyme_dictionary(enzyme_kinetics_dictionary)
+
   # initialize the buffer -
   buffer = ""
 
@@ -429,20 +451,53 @@ function build_default_flux_bounds(problem_object::ProblemObject)
   counter = 1
   for (index,reaction_object) in enumerate(list_of_reactions)
 
+    # Grab stuff from the reaction object -
     reaction_string = reaction_object.reaction_name
     reaction_type = reaction_object.reaction_type
+    catalyst_ec_number = reaction_object.catalyst_ec_number
 
     # Generate the comment string -
     comment_string = build_reaction_comment_string(reaction_object)
+    if (catalyst_ec_number != "[]")
 
-    # build bounds record -
-    buffer *= "\t\t0\t$(default_upper_bound)\t;\t# $(counter) $(comment_string)\n"
+        # lookup the for the kcat for this reaction -
+        local_enzyme_dictionary = enzyme_kinetics_dictionary[catalyst_ec_number]
+        kcat_value = local_enzyme_dictionary["kcat_value"]
+
+        # need to convert this to hr -
+        kcat_value = (3600)*(parse(Float64,kcat_value))
+
+        # what is the vmax?
+        vmax_value = kcat_value*enzyme_initial_condition
+
+        # write the line -
+         buffer *= "\t\t0\t$(vmax_value)\t;\t# Vmax [mmol/gdw-hr] $(counter)\t$(comment_string)\n"
+    else
+        # All reactions are treated as VMax -
+        buffer *= "\t\t0\t$(default_upper_bound)\t;\t# Vmax [mmol/gdw-hr] $(counter)\t$(comment_string)\n"
+    end
 
     # update counter -
     counter = counter + 1
-
   end
 
   # close -
   buffer *= "\t];\n"
+end
+
+function rekey_enzyme_dictionary(enzyme_kinetics_dictionary)
+
+    # initialize -
+    new_kinetics_dictionary = Dict()
+
+    # array of dictionaries -
+    array_of_dictionaries = enzyme_kinetics_dictionary["enzyme_data"]
+    for enzyme_dictionary in array_of_dictionaries
+
+        # grab the ec number -
+        ec_number = enzyme_dictionary["ec_number"]
+        new_kinetics_dictionary[ec_number] = enzyme_dictionary
+    end
+
+    return new_kinetics_dictionary
 end

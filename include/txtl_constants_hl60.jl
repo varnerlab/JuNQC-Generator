@@ -1,6 +1,7 @@
 # ------------------------------------------------------------------------------------------#
 # constants (from bionumbers)       units
 # ------------------------------------------------------------------------------------------#
+mass_of_cell = 975e-12              # pg
 cell_diameter = 12                  # mum
 number_of_rnapII = 75000            # copies/cells
 number_of_ribosome = 1e6            # copies/cells
@@ -26,8 +27,8 @@ polysome_number = 4					# number of ribsomoses per transcript
 V = ((1-fraction_nucleus)*(1/6)*(3.14159)*(cell_diameter)^3)*(1e-15)
 
 # Calculate the rnapII_concentration and ribosome_concentration
-rnapII_concentration = number_of_rnapII*(1/av_number)*(1/V)*1e9                         # nM
-ribosome_concentration = number_of_ribosome*(1/av_number)*(1/V)*1e9                     # nM
+rnapII_concentration = number_of_rnapII*(1/av_number)*(1/V)*1e6                         # muM
+ribosome_concentration = number_of_ribosome*(1/av_number)*(1/V)*1e6                     # muM
 
 # degrdation rate constants -
 degradation_constant_mRNA = -(1/mRNA_half_life_TF)*log(e,0.5)                           # hr^-1
@@ -40,7 +41,7 @@ kcat_translation = polysome_number*max_translation_rate*(3600/average_protein_le
 
 # kcat for transcription initiation -
 kcat_transcription_initiation = ((1/3600)*transcription_initiation_time_contstant)^-1   # hr^-1
-kcat_translation_initiation = 100*kcat_transcription_initiation                          # hr^-1
+kcat_translation_initiation = 100*kcat_transcription_initiation                         # hr^-1
 
 # Maximum specific growth rate -
 maximum_specific_growth_rate = (1/doubling_time_cell)*log(e,2)                          # hr^-1
@@ -52,6 +53,6 @@ avg_gene_concentration = avg_gene_number*(1/av_number)*(1/V)*1e9                
 death_rate_constant = 0.2*maximum_specific_growth_rate                                  # hr^-1
 
 # Saturation constants for translation and trascription -
-saturation_transcription = 600*(1/av_number)*(1/V)*1e9                           # nM
-saturation_translation = 95000*(1/av_number)*(1/V)*1e9                           # nM
+saturation_transcription = 600*(1/av_number)*(1/V)*1e9                                  # nM
+saturation_translation = 95000*(1/av_number)*(1/V)*1e6                                  # muM
 # -------------------------------------------------------------------------------------------#

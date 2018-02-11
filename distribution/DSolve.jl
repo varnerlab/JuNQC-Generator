@@ -31,13 +31,13 @@ function update_flux_bounds_array(time,time_step_size,state_array,data_dictionar
 end
 
 # update the species bounds -
-function update_species_bounds_array(time,time_step_size,state_array,data_dictionary)
-    return user_update_species_bounds(time,time_step_size,state_array,data_dictionary)
+function update_species_bounds_array(time,time_step_size,state_array,previous_state,data_dictionary)
+    return user_update_species_bounds(time,time_step_size,state_array,previous_state,data_dictionary)
 end
 
 # update the state array -
-function time_stepping_routine(time,time_step_size,state_array,data_dictionary)
-    return user_time_stepping_routine(time,time_step_size,state_array,data_dictionary)
+function time_stepping_routine(time,time_step_size,state_array,previous_state,data_dictionary)
+    return user_time_stepping_routine(time,time_step_size,state_array,previous_state,data_dictionary)
 end
 
 # update the data dictionary -
@@ -66,6 +66,7 @@ function main(time_start::Float64,time_stop::Float64,time_step_size::Float64,dat
 
     # setup current state -
     current_state = initial_condition_array
+    previous_state = initial_condition_array
 
     # setup current time -
     current_time = time_start
@@ -85,14 +86,18 @@ function main(time_start::Float64,time_stop::Float64,time_step_size::Float64,dat
         flux_bounds_array = update_flux_bounds_array(current_time,time_step_size,current_state,data_dictionary)
 
         # update the species bounds function -
-        species_bounds_array = update_species_bounds_array(current_time,time_step_size,current_state,data_dictionary)
+        species_bounds_array = update_species_bounds_array(current_time,time_step_size,current_state,previous_state,data_dictionary)
 
         # update the species and flux bounds arrays -
         data_dictionary["default_flux_bounds_array"] = flux_bounds_array
         data_dictionary["species_bounds_array"] = species_bounds_array
 
         # update the current state -
-        (current_state,flux_array) = time_stepping_routine(current_time,time_step_size,current_state,data_dictionary)
+        (current_state_new,flux_array) = time_stepping_routine(current_time,time_step_size,current_state,previous_state,data_dictionary)
+
+        # grab the current new state, and cache the previous state -
+        previous_state = current_state
+        current_state = current_state_new
 
         # update time -
         current_time = current_time + time_step_size
@@ -120,9 +125,9 @@ end
 #  ============ setup call to main ============================================ #
 
 # setup the simulation time scale -
-time_start = 0.0        # hr
-time_stop = 1.0         # hr
-time_step_size = 0.1    # hr
+time_start = 0.0            # hr
+time_stop = 36.0            # hr
+time_step_size = 0.01        # hr
 
 # load the data dictionary -
 data_dictionary = DataDictionary(time_start,time_stop,time_step_size)

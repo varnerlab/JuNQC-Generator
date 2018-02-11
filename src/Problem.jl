@@ -171,7 +171,7 @@ function build_reaction_list(statement_vector::Array{VFFSentence},configuration_
     enyzme_generation_flag = vff_sentence.sentence_type_flag
     reaction_type_flag = vff_sentence.sentence_type_flag
     catalyst_lexeme = vff_sentence.catalyst_lexeme
-
+    catalyst_ec_number = vff_sentence.sentence_ec_number
 
     # recatants -
     list_of_reactants::Array{SpeciesObject} = SpeciesObject[]
@@ -189,7 +189,7 @@ function build_reaction_list(statement_vector::Array{VFFSentence},configuration_
     reaction_object.reaction_name = vff_sentence.sentence_name
     reaction_object.reaction_type_flag = reaction_type_flag
     reaction_object.catalyst_lexeme = catalyst_lexeme
-
+    reaction_object.catalyst_ec_number = catalyst_ec_number
 
     # store -
     push!(reaction_array,reaction_object)

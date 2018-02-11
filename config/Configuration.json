@@ -2,7 +2,7 @@
 
   "default_parameter_dictionary":{
     "default_protein_half_life":"300",
-    "default_protein_initial_condition":"0.004",
+    "default_protein_initial_condition":"4.7326871794871794e-5",
     "default_saturation_constant":"0.130",
     "default_enzyme_kcat":"46800.0",
     "default_number_of_feed_streams":"3",

@@ -10,6 +10,7 @@ type VFFSentence
   sentence_forward_bound::Float64
   sentence_delimiter::Char
   sentence_handler::Symbol
+  sentence_ec_number::AbstractString
 
   # holds the symbol for the catalyst -
   catalyst_lexeme::String
@@ -60,6 +61,7 @@ type ReactionObject
   # holds the type flag -
   reaction_type_flag::Int
   catalyst_lexeme::String
+  catalyst_ec_number::String
 
   function ReactionObject()
     this = new()
@@ -69,9 +71,10 @@ end
 
 type ProblemObject
 
-  configuration_dictionary::Dict{AbstractString,Any}
-  list_of_species::Array{SpeciesObject}
-  list_of_reactions::Array{ReactionObject}
+    enzyme_kinetics_dictionary::Dict{AbstractString,Any}
+    configuration_dictionary::Dict{AbstractString,Any}
+    list_of_species::Array{SpeciesObject}
+    list_of_reactions::Array{ReactionObject}
 
   function ProblemObject()
     this = new()

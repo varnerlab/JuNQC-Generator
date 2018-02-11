@@ -157,64 +157,113 @@ function extract_vff_handler_symbol(sentence::String)
 end
 
 function vff_transcription_sentence_factory(sentence::String,handler_symbol::Symbol)
-    return vff_metabolic_sentence_factory(sentence,handler_symbol)
+    return vff_default_sentence_factory(sentence,handler_symbol)
 end
 
 function vff_translation_sentence_factory(sentence::String,handler_symbol::Symbol)
-    return vff_metabolic_sentence_factory(sentence,handler_symbol)
+    return vff_default_sentence_factory(sentence,handler_symbol)
 end
 
 function vff_degradation_sentence_factory(sentence::String,handler_symbol::Symbol)
-    return vff_metabolic_sentence_factory(sentence,handler_symbol)
+    return vff_default_sentence_factory(sentence,handler_symbol)
 end
 
 function vff_infrastructure_sentence_factory(sentence::String,handler_symbol::Symbol)
-    return vff_metabolic_sentence_factory(sentence,handler_symbol)
+    return vff_default_sentence_factory(sentence,handler_symbol)
+end
+
+function vff_default_sentence_factory(sentence::String,handler_symbol::Symbol)
+
+    # initialize -
+    sentence_vector = VFFSentence[]
+
+    # Ok, so now we have the array for sentences -
+    vff_sentence = VFFSentence()
+    vff_sentence.original_sentence = sentence
+
+    # split the sentence -
+    split_array = split(sentence,",")
+    vff_sentence.sentence_name = split_array[1]
+    vff_sentence.sentence_type_flag = parse(Int,convert(String,split_array[2]))
+    vff_sentence.catalyst_lexeme = convert(String,split_array[3])
+    vff_sentence.sentence_reactant_clause = split_array[4]
+    vff_sentence.sentence_product_clause = split_array[5]
+    vff_sentence.sentence_reverse_bound = parse(Float64,split_array[6])
+    vff_sentence.sentence_forward_bound = parse(Float64,split_array[7])
+    vff_sentence.sentence_handler = handler_symbol
+    vff_sentence.sentence_delimiter = ','
+    vff_sentence.sentence_ec_number = "[]"
+
+    # add sentence to sentence_vector -
+    push!(sentence_vector,vff_sentence)
+
+    # Check - is this reversible?
+    if (vff_sentence.sentence_reverse_bound == -Inf)
+
+      # ok, so we have a reversible reaction -
+      # first change lower bound to 0 -
+      vff_sentence.sentence_reverse_bound = 0.0
+
+      # create a new copy of sentence -
+      vff_sentence_copy = deepcopy(vff_sentence)
+      vff_sentence_copy.sentence_name = (vff_sentence_copy.sentence_name)*"_reverse"
+      vff_sentence_copy.sentence_reactant_clause = vff_sentence.sentence_product_clause
+      vff_sentence_copy.sentence_product_clause = vff_sentence.sentence_reactant_clause
+      vff_sentence_copy.sentence_handler = vff_sentence.sentence_handler
+      vff_sentence_copy.sentence_type_flag = vff_sentence.sentence_type_flag
+      vff_sentence_copy.sentence_ec_number = "[]"
+
+      # add sentence and sentence copy to the expanded_sentence_vector -
+      push!(sentence_vector,vff_sentence_copy)
+    end
+
+    return sentence_vector
 end
 
 function vff_metabolic_sentence_factory(sentence::String,handler_symbol::Symbol)
 
-  sentence_vector = VFFSentence[]
+    # Initialize -
+    sentence_vector = VFFSentence[]
 
-  # Ok, so now we have the array for sentences -
-  vff_sentence = VFFSentence()
-  vff_sentence.original_sentence = sentence
+    # Ok, so now we have the array for sentences -
+    vff_sentence = VFFSentence()
+    vff_sentence.original_sentence = sentence
 
-  @show sentence
+    # split the sentence -
+    split_array = split(sentence,",")
+    vff_sentence.sentence_name = split_array[1]
+    vff_sentence.sentence_type_flag = parse(Int,convert(String,split_array[2]))
+    vff_sentence.catalyst_lexeme = convert(String,split_array[3])
+    vff_sentence.sentence_reactant_clause = split_array[4]
+    vff_sentence.sentence_product_clause = split_array[5]
+    vff_sentence.sentence_reverse_bound = parse(Float64,split_array[6])
+    vff_sentence.sentence_forward_bound = parse(Float64,split_array[7])
+    vff_sentence.sentence_handler = handler_symbol
+    vff_sentence.sentence_delimiter = ','
+    vff_sentence.sentence_ec_number = split_array[8]
 
-  # split the sentence -
-  split_array = split(sentence,",")
-  vff_sentence.sentence_name = split_array[1]
-  vff_sentence.sentence_type_flag = parse(Int,convert(String,split_array[2]))
-  vff_sentence.catalyst_lexeme = convert(String,split_array[3])
-  vff_sentence.sentence_reactant_clause = split_array[4]
-  vff_sentence.sentence_product_clause = split_array[5]
-  vff_sentence.sentence_reverse_bound = parse(Float64,split_array[6])
-  vff_sentence.sentence_forward_bound = parse(Float64,split_array[7])
-  vff_sentence.sentence_handler = handler_symbol
-  vff_sentence.sentence_delimiter = ','
+    # add sentence to sentence_vector -
+    push!(sentence_vector,vff_sentence)
 
-  # add sentence to sentence_vector -
-  push!(sentence_vector,vff_sentence)
+    # Check - is this reversible?
+    if (vff_sentence.sentence_reverse_bound == -Inf)
 
-  # Check - is this reversible?
-  if (vff_sentence.sentence_reverse_bound == -Inf)
+        # ok, so we have a reversible reaction -
+        # first change lower bound to 0 -
+        vff_sentence.sentence_reverse_bound = 0.0
 
-    # ok, so we have a reversible reaction -
-    # first change lower bound to 0 -
-    vff_sentence.sentence_reverse_bound = 0.0
+        # create a new copy of sentence -
+        vff_sentence_copy = deepcopy(vff_sentence)
+        vff_sentence_copy.sentence_name = (vff_sentence_copy.sentence_name)*"_reverse"
+        vff_sentence_copy.sentence_reactant_clause = vff_sentence.sentence_product_clause
+        vff_sentence_copy.sentence_product_clause = vff_sentence.sentence_reactant_clause
+        vff_sentence_copy.sentence_handler = vff_sentence.sentence_handler
+        vff_sentence_copy.sentence_type_flag = vff_sentence.sentence_type_flag
+        vff_sentence_copy.sentence_ec_number = vff_sentence.sentence_ec_number
 
-    # create a new copy of sentence -
-    vff_sentence_copy = deepcopy(vff_sentence)
-    vff_sentence_copy.sentence_name = (vff_sentence_copy.sentence_name)*"_reverse"
-    vff_sentence_copy.sentence_reactant_clause = vff_sentence.sentence_product_clause
-    vff_sentence_copy.sentence_product_clause = vff_sentence.sentence_reactant_clause
-    vff_sentence_copy.sentence_handler = vff_sentence.sentence_handler
-    vff_sentence_copy.sentence_type_flag = vff_sentence.sentence_type_flag
+        # add sentence and sentence copy to the expanded_sentence_vector -
+        push!(sentence_vector,vff_sentence_copy)
+    end
 
-    # add sentence and sentence copy to the expanded_sentence_vector -
-    push!(sentence_vector,vff_sentence_copy)
-  end
-
-  return sentence_vector
+    return sentence_vector
 end

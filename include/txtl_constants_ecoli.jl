@@ -26,8 +26,8 @@ polysome_number = 4					            # number of ribsomoses per transcript
 V = ((1-fraction_nucleus)*(1/6)*(3.14159)*(cell_diameter)^3)*(1e-15)
 
 # Calculate the rnapII_concentration and ribosome_concentration
-rnapII_concentration = number_of_rnapII*(1/av_number)*(1/V)*1e9                         # nM
-ribosome_concentration = number_of_ribosome*(1/av_number)*(1/V)*1e9                     # nM
+rnapII_concentration = number_of_rnapII*(1/av_number)*(1/V)*1e6                         # muM
+ribosome_concentration = number_of_ribosome*(1/av_number)*(1/V)*1e6                     # muM
 
 # degrdation rate constants -
 degradation_constant_mRNA = -(1/mRNA_half_life_TF)*log(e,0.5)                           # hr^-1
@@ -53,5 +53,5 @@ death_rate_constant = 0.05*maximum_specific_growth_rate                         
 
 # Saturation constants for translation and trascription -
 saturation_transcription = 4600*(1/av_number)*(1/V)*1e9                                 # nM
-saturation_translation = 150000*(1/av_number)*(1/V)*1e9                                 # nM
+saturation_translation = 150000*(1/av_number)*(1/V)*1e6                                 # muM
 # -------------------------------------------------------------------------------------------#

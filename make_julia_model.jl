@@ -47,9 +47,13 @@ function main()
   # Load the JSON configuration file -
   config_dict = JSON.parsefile("./config/Configuration.json")
 
+  # Load the enzyme kinetics JSON file -
+  enzyme_kinetics_dictionary = JSON.parsefile("./config/Enzymes.json")
+
   # Generate the problem object -
   problem_object = generate_problem_object(metabolic_statement_vector,config_dict)
   problem_object.configuration_dictionary = config_dict
+  problem_object.enzyme_kinetics_dictionary = enzyme_kinetics_dictionary
 
   # Write the DataDictionary -
   component_set = Set{ProgramComponent}()
