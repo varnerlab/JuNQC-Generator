@@ -87,7 +87,7 @@ function build_debug_buffer(problem_object::ProblemObject)
   for (index,reaction_object) in enumerate(list_of_reactions)
 
     reaction_string = reaction_object.reaction_name
-    reaction_type = reaction_object.reaction_type
+    reaction_type = reaction_object.reaction_type_symbol
 
     # Build comment string -
     comment_string = build_reaction_comment_string(reaction_object)
@@ -238,7 +238,7 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
   for reaction_object in list_of_reactions
 
     reaction_string = reaction_object.reaction_name
-    reaction_type = reaction_object.reaction_type
+    reaction_type = reaction_object.reaction_type_symbol
 
     # Build comment string -
     comment_string = build_reaction_comment_string(reaction_object)
@@ -265,7 +265,7 @@ function build_data_dictionary_buffer(problem_object::ProblemObject,host_flag::S
   for reaction_object in list_of_reactions
 
     reaction_string = reaction_object.reaction_name
-    reaction_type = reaction_object.reaction_type
+    reaction_type = reaction_object.reaction_type_symbol
 
     debug_message = "Processing $(reaction_string) index $(counter) of $(number_of_reactions)"
     println(debug_message)
@@ -453,7 +453,7 @@ function build_default_flux_bounds(problem_object::ProblemObject)
 
     # Grab stuff from the reaction object -
     reaction_string = reaction_object.reaction_name
-    reaction_type = reaction_object.reaction_type
+    reaction_type = reaction_object.reaction_type_symbol
     catalyst_ec_number = reaction_object.catalyst_ec_number
 
     # Generate the comment string -

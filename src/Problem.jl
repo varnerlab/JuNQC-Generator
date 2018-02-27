@@ -1,3 +1,101 @@
+function generate_problem_object(model_dictionary::Dict{String,Any},configuration_dictionary::Dict{String,Any})
+
+    # Initilize an empty problem object -
+    problem_object::ProblemObject = ProblemObject()
+
+    # initialize -
+    species_array::Array{SpeciesObject} = SpeciesObject[]
+    reaction_array::Array{ReactionObject} = ReactionObject[]
+
+    # get the list of species -
+    list_of_species = model_dictionary["list_of_species"]
+    for species_dictionary in list_of_species
+
+        # Get the data -
+        species_symbol = species_dictionary["species_symbol"]
+        species_bound_type = species_dictionary["species_bound_type"]
+
+        # Build new species object -
+        species_object = SpeciesObject()
+        species_object.species_symbol = species_symbol
+        species_object.species_bound_type = Symbol(species_bound_type)
+
+        # cache -
+        push!(species_array,species_object)
+    end
+
+    # Build the reaction object from the JSON reaction dictionary -
+    list_of_reactions = model_dictionary["list_of_reactions"]
+    for reaction_dictionary in list_of_reactions
+
+        # Get the reaction data -
+        reaction_name = reaction_dictionary["reaction_name"]
+        reaction_type_flag = reaction_dictionary["reaction_type_flag"]
+        catalyst_lexeme = reaction_dictionary["catalyst_lexeme"]
+        catalyst_ec_number = reaction_dictionary["catalyst_ec_number"]
+
+        # build a new reaction object -
+        reaction_object = ReactionObject()
+        reaction_object.reaction_name = reaction_name
+        reaction_object.reaction_type_flag = parse(Int,reaction_type_flag)
+
+        # Hack to work w/code generator -
+        if (reaction_type_flag == 0)
+            reaction_object.reaction_type_symbol = :metabolic
+        else
+            reaction_object.reaction_type_symbol = :unknown
+        end
+
+
+        reaction_object.catalyst_lexeme = catalyst_lexeme
+        reaction_object.catalyst_ec_number = catalyst_ec_number
+
+        # Add the list of reactants -
+        list_of_reactants_json = reaction_dictionary["list_of_reactants"]
+        list_of_reactants_array = SpeciesObject[]
+        for species_dictionary in list_of_reactants_json
+
+            species_symbol = species_dictionary["symbol"]
+            stcoeff = parse(Float64,species_dictionary["stoichiometry"])
+
+            species_object = SpeciesObject()
+            species_object.species_symbol = species_symbol
+            species_object.stoichiometric_coefficient = stcoeff
+            push!(list_of_reactants_array,species_object)
+        end
+        reaction_object.list_of_reactants = list_of_reactants_array
+
+        # Add the list of products -
+        list_of_products_json = reaction_dictionary["list_of_products"]
+        list_of_products_array = SpeciesObject[]
+        for species_dictionary in list_of_products_json
+
+            species_symbol = species_dictionary["symbol"]
+            stcoeff = parse(Float64,species_dictionary["stoichiometry"])
+
+            species_object = SpeciesObject()
+            species_object.species_symbol = species_symbol
+            species_object.stoichiometric_coefficient = stcoeff
+            push!(list_of_products_array,species_object)
+        end
+        reaction_object.list_of_products = list_of_products_array
+
+        # cache -
+        push!(reaction_array,reaction_object)
+    end
+
+    # Partition species -
+    partition!(species_array)
+
+    # set data on problem_object -
+    problem_object.list_of_species = species_array
+    problem_object.list_of_reactions = reaction_array
+
+    # return#the problem_object -
+    return problem_object
+end
+
+
 function generate_problem_object(metabolic_statement_vector::Array{VFFSentence},configuration_dictionary::Dict{String,Any})
 
   # Initilize an empty problem object -

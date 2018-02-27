@@ -51,7 +51,7 @@ end
 type ReactionObject
 
   enyzme_generation_flag::Int
-  reaction_type::Symbol
+  reaction_type_symbol::Symbol
   reaction_index::Int
   is_reaction_reversible::Bool
   reaction_name::AbstractString

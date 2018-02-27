@@ -255,7 +255,7 @@ function partition!(list_of_reactions::Array{ReactionObject})
   number_of_solved_reactions = length(list_of_solved_indexes)
   for index in 1:number_of_solved_reactions
     reaction_object = list_of_reactions[index]
-    reaction_object.reaction_type = :solved
+    reaction_object.reaction_type_symbol = :solved
   end
 
   # how many kinetic rates do we have?
@@ -263,7 +263,7 @@ function partition!(list_of_reactions::Array{ReactionObject})
   for index in 1:number_of_kinetic_rates
     translated_index = index+number_of_solved_reactions
     reaction_object = list_of_reactions[translated_index]
-    reaction_object.reaction_type = :kinetic
+    reaction_object.reaction_type_symbol = :kinetic
   end
 end
 

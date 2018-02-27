@@ -52,7 +52,7 @@ GLPK.set_obj_name(lp_problem, "objective")
 # Set solver parameters
 solver_parameters = GLPK.SimplexParam();
 solver_parameters.msg_lev = GLPK.MSG_OFF;
-solver_parameters.presolve = GLPK.ON;
+solver_parameters.presolve = GLPK.OFF;
 
 # Are we doing min -or- max?
 min_flag = data_dictionary["is_minimum_flag"];
@@ -162,5 +162,5 @@ status_flag = GLPK.get_status(lp_problem)
 uptake_array = stoichiometric_matrix*calculated_flux_array;
 
 # Formulate the return tuple -
-return (objective_value, calculated_flux_array, dual_value_array, uptake_array, status_flag);
+return (objective_value, calculated_flux_array, dual_value_array, uptake_array, exit_flag,status_flag);
 end

@@ -1,51 +1,12 @@
-function parse_vff_measured_species_statements(path_to_model_file::AbstractString)
+function parse_json_metabolic_statements(path_to_model_file::AbstractString)
 
-  # initialize -
-  measured_species_vector = SpeciesObject[]
-  tmp_array::Array{AbstractString} = AbstractString[]
-  desired_handler_symbol::Symbol = :measured_species_handler
-  current_handler_symbol::Symbol = :metabolic_reaction_handler
+    # ok, load the model file -
+    data_dictionary = JSON.parsefile(path_to_model_file)
 
-  try
-
-    # Open the model file, and read each line into a vector -
-    open(path_to_model_file,"r") do model_file
-      for line in eachline(model_file)
-
-          if (contains(line,"//") == false && search(line,"\n")[1] != 1)
-            push!(tmp_array,chomp(line))
-          end
-      end
-    end
-
-    counter = 1
-    for sentence in tmp_array
-
-      # Check the current pragma -
-      if (contains(sentence,"#pragma") == true)
-
-        # Extract the current handler -
-        current_handler_symbol = extract_vff_handler_symbol(sentence)
-      end
-
-      # Depending upon the handler_symbol, we will process diff types of records -
-      if (current_handler_symbol == desired_handler_symbol && contains(sentence,"#pragma") == false)
-
-        measured_species_object = vff_measured_species_object_factory(sentence,current_handler_symbol)
-        measured_species_object.species_index = counter
-        push!(measured_species_vector,measured_species_object)
-
-        # Update the counter -
-        counter = counter + 1
-      end
-    end
-
-  catch err
-    showerror(STDOUT, err, backtrace());println()
-  end
-
-  return measured_species_vector
+    # ok, we just need to return the dictionary -
+    return data_dictionary
 end
+
 
 
 function parse_vff_metabolic_statements(path_to_model_file::AbstractString)
@@ -69,6 +30,8 @@ function parse_vff_metabolic_statements(path_to_model_file::AbstractString)
           end
       end
     end
+
+    @show tmp_array
 
     for sentence in tmp_array
 
